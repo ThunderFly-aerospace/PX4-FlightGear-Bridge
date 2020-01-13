@@ -66,6 +66,7 @@ public:
 
 		Vector3d getBarometrTempAltPres(const fgOutputData& fgData);
 		Vector3d getMagneticField(const fgOutputData& fgData);
+        Vector3d getGyro(const fgOutputData& fgData);
 		double getDiffPressure(const fgOutputData& fgData, double localTemp);
 
 

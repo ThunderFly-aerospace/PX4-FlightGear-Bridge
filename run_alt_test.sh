@@ -1,11 +1,11 @@
 #!/bin/bash
 
 
-FGFS=fgfs
-#FGFS=/usr/local/flightgear/bin/fgfs
+#FGFS=fgfs
+FGFS=/usr/local/flightgear/bin/fgfs
 
-PROTOCOL=/usr/share/games/flightgear/Protocol
-#PROTICOL=/usr/local/flightgear/share/flightgear/Protocol
+#PROTOCOL=/usr/share/games/flightgear/Protocol
+PROTOCOL=/usr/local/flightgear/share/flightgear/Protocol
 
 
 cp px4bridge.xml $PROTOCOL
@@ -14,6 +14,7 @@ $FGFS \
     --timeofday=noon \
     --disable-sound \
     --telnet=4443 \
-    --generic=socket,out,1,127.0.0.1,4444,udp,px4bridge
+    --generic=socket,out,10,127.0.0.1,4444,udp,px4bridge \
+    --disable-real-weather-fetch 
 
 #./a.out

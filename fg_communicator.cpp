@@ -86,7 +86,7 @@ int FGCommunicator::Recieve()
         swap64(&outputPacket.ratePitch_degps);
         swap64(&outputPacket.rateYaw_degps);
 
-        fprintf(stderr,"FG data recieved\n");
+        //fprintf(stderr,"FG data recieved\n");
 
 		vehicle->setFGData(outputPacket);
     }

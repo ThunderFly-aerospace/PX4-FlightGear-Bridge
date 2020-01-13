@@ -76,9 +76,9 @@ int PX4Communicator::Send()
     packetlen = mavlink_msg_to_send_buffer(buffer, &msg);
     send(px4MavlinkSock, buffer, packetlen, 0);
 
-	mavlink_msg_hil_state_quaternion_encode_chan(1, 200, MAVLINK_COMM_0, &msg, &vehicle->hil_state_quat);
+	/*mavlink_msg_hil_state_quaternion_encode_chan(1, 200, MAVLINK_COMM_0, &msg, &vehicle->hil_state_quat);
     packetlen = mavlink_msg_to_send_buffer(buffer, &msg);
-    send(px4MavlinkSock, buffer, packetlen, 0);
+    send(px4MavlinkSock, buffer, packetlen, 0);*/
 
     mavlink_msg_hil_gps_encode_chan(1, 200, MAVLINK_COMM_0, &msg, &vehicle->hil_gps_msg);
     packetlen = mavlink_msg_to_send_buffer(buffer, &msg);

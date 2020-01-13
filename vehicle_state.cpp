@@ -2,20 +2,24 @@
 
 #include "geo_mag_declination.h"
 
+#include <iostream>
+
+using namespace std;
+
 VehicleState::VehicleState()
 {
 	standard_normal_distribution_ = std::normal_distribution<double>(0.0f, 1.0f);
 
 	acc_nois=0.01;
-	gyro_nois=degToRad(0.1);
-	mag_nois=0.01;
+	gyro_nois=0.001;
+	mag_nois=0.001;
 	baro_alt_nois=0.1;
 }
 
 void VehicleState::setFGData(const fgOutputData& fgData)
 {
 	setSensorMsg(fgData);
-    setStateQuatMsg(fgData);
+    //setStateQuatMsg(fgData);
     setGPSMsg(fgData);
 }
 
@@ -54,7 +58,7 @@ void VehicleState::setStateQuatMsg(const fgOutputData& fgData)
 
       hil_state_quat.lat = fgData.latitude_deg * 1e7;
       hil_state_quat.lon = fgData.longitude_deg * 1e7;
-      hil_state_quat.alt = ftToM(fgData.altitude_ft) * 1000;
+      hil_state_quat.alt = ftToM(fgData.altitude_ft) * 100;
 
       //TODO:
       hil_state_quat.vx = 0;
@@ -75,13 +79,18 @@ void VehicleState::setStateQuatMsg(const fgOutputData& fgData)
 void VehicleState::setSensorMsg(const fgOutputData& fgData)
 {
 	    sensor_msg.time_usec = fgData.elapsed_sec*1e6;
+ 
+        //akcelerometr vypadá hodnotově také v pořádku
         sensor_msg.xacc = ftToM(fgData.accelX_fps)+acc_nois*standard_normal_distribution_(random_generator_);
         sensor_msg.yacc = ftToM(fgData.accelY_fps)+acc_nois*standard_normal_distribution_(random_generator_);
         sensor_msg.zacc = ftToM(fgData.accelZ_fps)+acc_nois*standard_normal_distribution_(random_generator_);
-        sensor_msg.xgyro = degToRad(fgData.rateRoll_degps)+gyro_nois*standard_normal_distribution_(random_generator_);
-        sensor_msg.ygyro = degToRad(fgData.ratePitch_degps)+gyro_nois*standard_normal_distribution_(random_generator_);
-        sensor_msg.zgyro = degToRad(fgData.rateYaw_degps)+gyro_nois*standard_normal_distribution_(random_generator_);
-   
+  
+        Vector3d gyro=getGyro(fgData);
+        sensor_msg.xgyro = gyro[0]+gyro_nois*standard_normal_distribution_(random_generator_);
+        sensor_msg.ygyro = gyro[1]+gyro_nois*standard_normal_distribution_(random_generator_);
+        sensor_msg.zgyro = gyro[2]+gyro_nois*standard_normal_distribution_(random_generator_);
+
+        //magnetometr davva stejne vysledky jako Gazebo 
 		Vector3d mag_l=getMagneticField(fgData);
         sensor_msg.xmag = mag_l[0]+mag_nois*standard_normal_distribution_(random_generator_);
         sensor_msg.ymag = mag_l[1]+mag_nois*standard_normal_distribution_(random_generator_);
@@ -94,6 +103,16 @@ void VehicleState::setSensorMsg(const fgOutputData& fgData)
 
         sensor_msg.diff_pressure = getDiffPressure(fgData,TAP[0]);
         sensor_msg.fields_updated = 4095;
+
+
+}
+
+Vector3d VehicleState::getGyro(const fgOutputData& fgData)
+{
+        Quaterniond bodyRot(degToRad(fgData.roll_deg),degToRad(fgData.pitch_deg),degToRad(fgData.heading_deg));
+        Vector3d omega(degToRad(fgData.rateRoll_degps),degToRad(fgData.ratePitch_degps),degToRad(fgData.rateYaw_degps));
+
+        return bodyRot.RotateVectorReverse(omega*Vector3d(1,-1,1));
 }
 
 Vector3d VehicleState::getMagneticField(const fgOutputData& fgData)
@@ -107,15 +126,25 @@ Vector3d VehicleState::getMagneticField(const fgOutputData& fgData)
 
 		// Magnetic filed components are calculated by http://geomag.nrcan.gc.ca/mag_fld/comp-en.php
 		float H = strength_ga * cosf(inclination_rad);
-		float Z = tanf(inclination_rad) * H;
+		float Z = H * tanf(inclination_rad) ;
 		float X = H * cosf(declination_rad);
 		float Y = H * sinf(declination_rad);
 
 		Vector3d mag_g(X,Y,Z);
-		
-		Quaterniond bodyRot(degToRad(fgData.roll_deg),degToRad(fgData.pitch_deg),degToRad(fgData.heading_deg));
 
-		return bodyRot.RotateVectorReverse(mag_g);
+        Quaterniond roll(Vector3d(1,0,0), degToRad(fgData.roll_deg));
+        Quaterniond pitch(Vector3d(0,1,0), degToRad(fgData.pitch_deg));
+        Quaterniond heading(Vector3d(0,0,1),degToRad(fgData.heading_deg));
+        Quaterniond bodyRot=heading*roll*pitch;
+
+       // Quaterniond bodyRot2(degToRad(fgData.roll_deg),degToRad(fgData.pitch_deg),degToRad(fgData.heading_deg));
+
+        Vector3d mag1=bodyRot.RotateVectorReverse(mag_g);
+        //Vector3d mag2=bodyRot2.RotateVectorReverse(mag_g);
+
+       // cerr << mag1[0] << " " << mag1[1] << " " << mag1[2] <<endl <<mag1[0] << " " << mag1[1] << " " << mag1[2] << endl << endl;
+
+		return mag1;
 }
 
 Vector3d VehicleState::getBarometrTempAltPres(const fgOutputData& fgData)
