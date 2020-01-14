@@ -30,14 +30,19 @@ void VehicleState::setGPSMsg(const fgOutputData& fgData)
     hil_gps_msg.lat = fgData.latitude_deg * 1e7;
     hil_gps_msg.lon = fgData.longitude_deg * 1e7;
     hil_gps_msg.alt = ftToM(fgData.altitude_ft) * 1000;
-    hil_gps_msg.eph =  100.0;
-    hil_gps_msg.epv = 100.0;
-    hil_gps_msg.vel = 65535;
+    hil_gps_msg.eph =  100;
+    hil_gps_msg.epv = 100;    
     hil_gps_msg.vn = ftToM(fgData.speed_north_fps)*100;
     hil_gps_msg.ve = ftToM(fgData.speed_east_fps)*100;
     hil_gps_msg.vd = ftToM(fgData.speed_down_fps)*100;
-    hil_gps_msg.cog = 65535;
+    hil_gps_msg.vel = std::sqrt(hil_gps_msg.vn*hil_gps_msg.vn+hil_gps_msg.ve*hil_gps_msg.ve);
+    double cog=-std::atan2(hil_gps_msg.vn,hil_gps_msg.ve)*180/3.141592654+90;
+    if(cog<0)
+        cog+=360;
+    hil_gps_msg.cog =cog*100; 
     hil_gps_msg.satellites_visible = 10;
+
+   // std::cerr<< fgData.speed_north_fps <<"   " << fgData.speed_east_fps << std::endl;
 
 }
 
@@ -96,12 +101,13 @@ void VehicleState::setSensorMsg(const fgOutputData& fgData)
         sensor_msg.ymag = mag_l[1]+mag_nois*standard_normal_distribution_(random_generator_);
         sensor_msg.zmag = mag_l[2]+mag_nois*standard_normal_distribution_(random_generator_);
 
-		Vector3d TAP=getBarometrTempAltPres(fgData);
-        sensor_msg.temperature = TAP[0];
-        sensor_msg.abs_pressure = TAP[2];
-        sensor_msg.pressure_alt = TAP[1];
+        sensor_msg.temperature = (float)fgData.temperature_degc;
+        sensor_msg.abs_pressure = fgData.pressure_inhg*3386.39/100.0;
+        sensor_msg.pressure_alt = ftToM(fgData.pressure_alt_ft);
 
-        sensor_msg.diff_pressure = getDiffPressure(fgData,TAP[0]);
+        std::cout << fgData.temperature_degc << "  " << fgData.pressure_inhg*3386.39/100.0 << "   " << fgData.pressure_alt_ft <<std::endl;
+
+        sensor_msg.diff_pressure = (fgData.measured_total_pressure_inhg-fgData.pressure_inhg)*3386.39/100.0 ;
         sensor_msg.fields_updated = 4095;
 
 
@@ -145,55 +151,6 @@ Vector3d VehicleState::getMagneticField(const fgOutputData& fgData)
        // cerr << mag1[0] << " " << mag1[1] << " " << mag1[2] <<endl <<mag1[0] << " " << mag1[1] << " " << mag1[2] << endl << endl;
 
 		return mag1;
-}
-
-Vector3d VehicleState::getBarometrTempAltPres(const fgOutputData& fgData)
-{
-    // calculate abs_pressure using an ISA model for the tropsphere (valid up to 11km above MSL)
-    const float lapse_rate = 0.0065f; // reduction in temperature with altitude (Kelvin/m)
-    const float temperature_msl = 288.0f; // temperature at MSL (Kelvin)
-    float alt_msl = ftToM(fgData.altitude_ft)+baro_alt_nois*standard_normal_distribution_(random_generator_);;
-    float temperature_local = temperature_msl - lapse_rate * alt_msl;
-    float pressure_ratio = powf((temperature_msl/temperature_local), 5.256f);
-    const float pressure_msl = 101325.0f; // pressure at MSL
-    float absolute_pressure = pressure_msl / pressure_ratio;
-
-    // convert to hPa
-    absolute_pressure *= 0.01f;
-	Vector3d ret;
-    ret[2]=absolute_pressure;
-
-    // calculate density using an ISA model for the tropsphere (valid up to 11km above MSL)
-    //const float density_ratio = powf((temperature_msl/temperature_local) , 4.256f);
-    //float rho = 1.225f / density_ratio;
-
-    // calculate pressure altitude including effect of pressure noise
-    ret[1]=alt_msl;
-
-    // calculate temperature in Celsius
-    ret[0]=temperature_local - 273.0f;
-
-	return ret;
-}
-
-double VehicleState::getDiffPressure(const fgOutputData& fgData, double localTemp)
-{
-	const double temperature_msl = 288.0; // temperature at MSL (Kelvin)
-    double temperature_local = localTemp + 273.0;
-    const double density_ratio = pow((temperature_msl/temperature_local) , 4.256);
-    double rho = 1.225 / density_ratio;
-
-    // Let's use a rough guess of 0.05 hPa as the standard devitiation which roughly yields
-    // about +/- 1 m/s noise.
-    //const float diff_pressure_stddev = 0.05f;
-    //const float diff_pressure_noise = standard_normal_distribution_(random_generator_) * diff_pressure_stddev;
-
-    // calculate differential pressure in hPa
-    // if vehicle is a tailsitter the airspeed axis is different (z points from nose to tail)
-	double vel_ms=fgData.airspeed_kt*1.852/3.6;
-    return 0.005*rho*vel_ms*vel_ms;
-    
-
 }
 
 

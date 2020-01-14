@@ -37,6 +37,12 @@ struct fgOutputData {
         double          ratePitch_degps;
         double          rateYaw_degps;
 
+        //baro
+        double          pressure_alt_ft;
+        double          temperature_degc;
+        double          pressure_inhg;
+        double          measured_total_pressure_inhg;
+
 } __attribute__((packed));
 
 

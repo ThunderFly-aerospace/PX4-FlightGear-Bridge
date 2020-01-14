@@ -3,7 +3,9 @@
 <PropertyList>
   <generic>
     <output>
-      <binary_mode>true</binary_mode>
+      <binary_mode>false</binary_mode>
+      <var_separator>tab</var_separator>
+      <line_separator>newline</line_separator>
 
       <chunk>
 	    <name>elapsed_sec</name>
@@ -54,9 +56,9 @@
       </chunk> 
 
       <chunk>
-	    <name>east_north_fps</name>
+	    <name>speed_east_fps</name>
 	    <type>double</type>
-	    <node>/velocities/east-north-fps</node>
+	    <node>/velocities/speed-east-fps</node>
       </chunk> 
 
       <chunk>
@@ -106,6 +108,30 @@
 		<type>double</type>
 		<node>/orientation/yaw-rate-degps</node>
 	</chunk> 
+
+<!--     <chunk>
+		<name>pressure-alt-ft</name>
+		<type>double</type>
+		<node>/instrumentation/altimeter/pressure-alt-ft</node>
+	</chunk> 
+
+     <chunk>
+		<name>temperature-degc</name>
+		<type>double</type>
+		<node>/environment/temperature-degc</node>
+	</chunk> 
+
+     <chunk>
+		<name>pressure-inhg</name>
+		<type>double</type>
+		<node>/systems/static/pressure-inhg</node>
+	</chunk> 
+
+     <chunk>
+		<name>measured-total-pressure-inhg</name>
+		<type>double</type>
+		<node>/systems/pitot/measured-total-pressure-inhg</node>
+	</chunk> -->
 
     </output>
   </generic>
