@@ -14,6 +14,9 @@ VehicleState::VehicleState()
 	gyro_nois=0.001;
 	mag_nois=0.001;
 	baro_alt_nois=0.1;
+    temp_nois=0.1;
+    abs_pressure_nois=0.5;
+    diff_pressure_nois=0.01;
 }
 
 void VehicleState::setFGData(const fgOutputData& fgData)
@@ -42,7 +45,7 @@ void VehicleState::setGPSMsg(const fgOutputData& fgData)
     hil_gps_msg.cog =cog*100; 
     hil_gps_msg.satellites_visible = 10;
 
-   // std::cerr<< fgData.speed_north_fps <<"   " << fgData.speed_east_fps << std::endl;
+   // std::cerr<< fgData.speed_north_fps <<"   " << fgData.speed_east_fps << std::endl; 
 
 }
 
@@ -101,13 +104,11 @@ void VehicleState::setSensorMsg(const fgOutputData& fgData)
         sensor_msg.ymag = mag_l[1]+mag_nois*standard_normal_distribution_(random_generator_);
         sensor_msg.zmag = mag_l[2]+mag_nois*standard_normal_distribution_(random_generator_);
 
-        sensor_msg.temperature = (float)fgData.temperature_degc;
-        sensor_msg.abs_pressure = fgData.pressure_inhg*3386.39/100.0;
-        sensor_msg.pressure_alt = ftToM(fgData.pressure_alt_ft);
+        sensor_msg.temperature = fgData.temperature_degc +temp_nois*standard_normal_distribution_(random_generator_);
+        sensor_msg.abs_pressure = fgData.pressure_inhg*3386.39/100.0+abs_pressure_nois*standard_normal_distribution_(random_generator_);
+        sensor_msg.pressure_alt = ftToM(fgData.pressure_alt_ft)+baro_alt_nois*standard_normal_distribution_(random_generator_);
 
-        std::cout << fgData.temperature_degc << "  " << fgData.pressure_inhg*3386.39/100.0 << "   " << fgData.pressure_alt_ft <<std::endl;
-
-        sensor_msg.diff_pressure = (fgData.measured_total_pressure_inhg-fgData.pressure_inhg)*3386.39/100.0 ;
+        sensor_msg.diff_pressure = (fgData.measured_total_pressure_inhg-fgData.pressure_inhg)*3386.39/100.0+diff_pressure_nois*standard_normal_distribution_(random_generator_) ;
         sensor_msg.fields_updated = 4095;
 
 
@@ -115,10 +116,28 @@ void VehicleState::setSensorMsg(const fgOutputData& fgData)
 
 Vector3d VehicleState::getGyro(const fgOutputData& fgData)
 {
-        Quaterniond bodyRot(degToRad(fgData.roll_deg),degToRad(fgData.pitch_deg),degToRad(fgData.heading_deg));
-        Vector3d omega(degToRad(fgData.rateRoll_degps),degToRad(fgData.ratePitch_degps),degToRad(fgData.rateYaw_degps));
 
-        return bodyRot.RotateVectorReverse(omega*Vector3d(1,-1,1));
+      //  std::cout << fgData.rateRoll_degps << " " << fgData.ratePitch_degps << " " << fgData.rateYaw_degps << std::endl;
+
+
+        Quaterniond roll(Vector3d(1,0,0), degToRad(fgData.roll_deg));
+        Quaterniond pitch(Vector3d(0,1,0), degToRad(fgData.pitch_deg));
+        Quaterniond heading(Vector3d(0,0,1),degToRad(fgData.heading_deg));
+        Quaterniond bodyRot=heading*pitch*roll;        
+
+        Quaterniond rollRate(Vector3d(1,0,0), -degToRad(fgData.rateRoll_degps));
+        Quaterniond pitchRate(Vector3d(0,1,0), degToRad(fgData.ratePitch_degps));
+        Quaterniond headingRate(Vector3d(0,0,1),degToRad(fgData.rateYaw_degps));
+        Quaterniond omega=rollRate*pitchRate*headingRate;
+
+        Vector3d ret;
+        ret[0]=degToRad(fgData.rateRoll_degps);
+        ret[1]=degToRad(fgData.ratePitch_degps)/std::cos(degToRad(fgData.roll_deg));
+        ret[2]=0;
+        
+        std::cout << ret[0] << " " << ret[1] << " " << ret[2] << std::endl;
+
+        return ret;
 }
 
 Vector3d VehicleState::getMagneticField(const fgOutputData& fgData)
@@ -132,7 +151,7 @@ Vector3d VehicleState::getMagneticField(const fgOutputData& fgData)
 
 		// Magnetic filed components are calculated by http://geomag.nrcan.gc.ca/mag_fld/comp-en.php
 		float H = strength_ga * cosf(inclination_rad);
-		float Z = H * tanf(inclination_rad) ;
+		float Z = H * tanf(inclination_rad);
 		float X = H * cosf(declination_rad);
 		float Y = H * sinf(declination_rad);
 
@@ -141,7 +160,7 @@ Vector3d VehicleState::getMagneticField(const fgOutputData& fgData)
         Quaterniond roll(Vector3d(1,0,0), degToRad(fgData.roll_deg));
         Quaterniond pitch(Vector3d(0,1,0), degToRad(fgData.pitch_deg));
         Quaterniond heading(Vector3d(0,0,1),degToRad(fgData.heading_deg));
-        Quaterniond bodyRot=heading*roll*pitch;
+        Quaterniond bodyRot=heading*pitch*roll;
 
        // Quaterniond bodyRot2(degToRad(fgData.roll_deg),degToRad(fgData.pitch_deg),degToRad(fgData.heading_deg));
 

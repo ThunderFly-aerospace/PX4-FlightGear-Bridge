@@ -80,6 +80,9 @@ public:
 		double gyro_nois;
 		double mag_nois;
 		double baro_alt_nois;
+        double temp_nois;
+        double abs_pressure_nois;
+        double diff_pressure_nois;
    
 };
 

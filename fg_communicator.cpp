@@ -86,6 +86,11 @@ int FGCommunicator::Recieve()
         swap64(&outputPacket.ratePitch_degps);
         swap64(&outputPacket.rateYaw_degps);
 
+        swap64(&outputPacket.pressure_alt_ft);
+        swap64(&outputPacket.temperature_degc);
+        swap64(&outputPacket.pressure_inhg);
+        swap64(&outputPacket.measured_total_pressure_inhg);
+
         //fprintf(stderr,"FG data recieved\n");
 
 		vehicle->setFGData(outputPacket);

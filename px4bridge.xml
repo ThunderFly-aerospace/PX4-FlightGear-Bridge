@@ -3,135 +3,156 @@
 <PropertyList>
   <generic>
     <output>
-      <binary_mode>false</binary_mode>
-      <var_separator>tab</var_separator>
-      <line_separator>newline</line_separator>
+      <binary_mode>true</binary_mode>
+     <!-- <var_separator>tab</var_separator>
+      <line_separator>newline</line_separator>-->
 
       <chunk>
 	    <name>elapsed_sec</name>
 	    <type>double</type>
+        <format>%.3f</format>
 	    <node>/sim/time/elapsed-sec</node>
       </chunk>    
 
       <chunk>
 	    <name>latitude_deg</name>
 	    <type>double</type>
+        <format>%.3f</format>
 	    <node>/position/latitude-deg</node>
       </chunk>    
 
       <chunk>
 	    <name>longitude_deg</name>
 	    <type>double</type>
+        <format>%.3f</format>
 	    <node>/position/longitude-deg</node>
       </chunk> 
 
       <chunk>
 	    <name>altitude_ft</name>
 	    <type>double</type>
+        <format>%.3f</format>
 	    <node>/position/altitude-ft</node>
       </chunk>   
 
       <chunk>
 	    <name>roll_deg</name>
 	    <type>double</type>
+        <format>%.3f</format>
 	    <node>/orientation/roll-deg</node>
       </chunk> 
 
       <chunk>
 	    <name>pitch_deg</name>
 	    <type>double</type>
+        <format>%.3f</format>
 	    <node>/orientation/pitch-deg</node>
       </chunk> 
 
       <chunk>
 	    <name>heading_deg</name>
 	    <type>double</type>
+        <format>%.3f</format>
 	    <node>/orientation/heading-deg</node>
       </chunk> 
 
       <chunk>
 	    <name>speed_north_fps</name>
 	    <type>double</type>
+        <format>%.3f</format>
 	    <node>/velocities/speed-north-fps</node>
       </chunk> 
 
       <chunk>
 	    <name>speed_east_fps</name>
 	    <type>double</type>
+        <format>%.3f</format>
 	    <node>/velocities/speed-east-fps</node>
       </chunk> 
 
       <chunk>
 	    <name>speed_down_fps</name>
 	    <type>double</type>
+        <format>%.3f</format>
 	    <node>/velocities/speed-down-fps</node>
       </chunk> 
 
       <chunk>
 	    <name>airspeed_kt</name>
 	    <type>double</type>
+        <format>%.3f</format>
 	    <node>/velocities/airspeed-kt</node>
       </chunk> 
 
  	 <chunk>
 		<name>x-accel</name>
-		<type>double</type>
+	    <type>double</type>
+        <format>%.3f</format>
 		<node>/accelerations/pilot/x-accel-fps_sec</node>
      </chunk>
 
      <chunk>
 		<name>y-accel</name>
-		<type>double</type>
+	    <type>double</type>
+        <format>%.3f</format>
 		<node>/accelerations/pilot/y-accel-fps_sec</node>
      </chunk>
 
      <chunk>
 		<name>z-accel</name>
-		<type>double</type>
+	    <type>double</type>
+        <format>%.3f</format>
 		<node>/accelerations/pilot/z-accel-fps_sec</node>
      </chunk>
 
      <chunk>
 		<name>roll-rate</name>
-		<type>double</type>
+	    <type>double</type>
+        <format>%.3f</format>
 		<node>/orientation/roll-rate-degps</node>
      </chunk>
  
      <chunk>
 		<name>pitch-rate</name>
-		<type>double</type>
+	    <type>double</type>
+        <format>%.3f</format>
 		<node>/orientation/pitch-rate-degps</node>
      </chunk>
  
      <chunk>
 		<name>yaw-rate</name>
-		<type>double</type>
+	    <type>double</type>
+        <format>%.3f</format>
 		<node>/orientation/yaw-rate-degps</node>
 	</chunk> 
 
-<!--     <chunk>
+    <chunk>
 		<name>pressure-alt-ft</name>
-		<type>double</type>
+	    <type>double</type>
+        <format>%.3f</format>
 		<node>/instrumentation/altimeter/pressure-alt-ft</node>
 	</chunk> 
 
      <chunk>
 		<name>temperature-degc</name>
-		<type>double</type>
+	    <type>double</type>
+        <format>%.3f</format>
 		<node>/environment/temperature-degc</node>
 	</chunk> 
 
      <chunk>
 		<name>pressure-inhg</name>
-		<type>double</type>
+	    <type>double</type>
+        <format>%.3f</format>
 		<node>/systems/static/pressure-inhg</node>
 	</chunk> 
 
      <chunk>
 		<name>measured-total-pressure-inhg</name>
-		<type>double</type>
+	    <type>double</type>
+        <format>%.3f</format>
 		<node>/systems/pitot/measured-total-pressure-inhg</node>
-	</chunk> -->
+	</chunk>
 
     </output>
   </generic>
