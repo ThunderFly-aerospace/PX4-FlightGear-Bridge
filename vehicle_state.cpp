@@ -10,17 +10,25 @@ VehicleState::VehicleState()
 {
 	standard_normal_distribution_ = std::normal_distribution<double>(0.0f, 1.0f);
 
-	acc_nois=0.01;
+	acc_nois=0.0001;
 	gyro_nois=0.001;
 	mag_nois=0.001;
-	baro_alt_nois=0.1;
-    temp_nois=0.1;
-    abs_pressure_nois=0.5;
+	baro_alt_nois=0.01;
+    temp_nois=0.01;
+    abs_pressure_nois=0.05;
     diff_pressure_nois=0.01;
 }
 
 void VehicleState::setFGData(const fgOutputData& fgData)
 {
+    double freq=1.0/(fgData.elapsed_sec-lastTime);
+    lastTime=fgData.elapsed_sec;
+
+    if(freq<40)
+    {
+        std::cout << "Freq: "<< freq <<std::endl;
+    }
+
 	setSensorMsg(fgData);
     //setStateQuatMsg(fgData);
     setGPSMsg(fgData);
@@ -49,7 +57,7 @@ void VehicleState::setGPSMsg(const fgOutputData& fgData)
 
 }
 
-void VehicleState::setStateQuatMsg(const fgOutputData& fgData)
+/*void VehicleState::setStateQuatMsg(const fgOutputData& fgData)
 {
       hil_state_quat.time_usec = fgData.elapsed_sec*1e6;
 
@@ -82,7 +90,7 @@ void VehicleState::setStateQuatMsg(const fgOutputData& fgData)
       hil_state_quat.yacc = ftToM(fgData.accelY_fps)*1000;
       hil_state_quat.zacc = ftToM(fgData.accelZ_fps)*1000;
 
-}
+}*/
 
 void VehicleState::setSensorMsg(const fgOutputData& fgData)
 {
@@ -92,7 +100,10 @@ void VehicleState::setSensorMsg(const fgOutputData& fgData)
         sensor_msg.xacc = ftToM(fgData.accelX_fps)+acc_nois*standard_normal_distribution_(random_generator_);
         sensor_msg.yacc = ftToM(fgData.accelY_fps)+acc_nois*standard_normal_distribution_(random_generator_);
         sensor_msg.zacc = ftToM(fgData.accelZ_fps)+acc_nois*standard_normal_distribution_(random_generator_);
-  
+
+        //if(sensor_msg.xacc<-100 || sensor_msg.yacc<-100 || sensor_msg.zacc<-100)
+         //   std::cout <<sensor_msg.xacc << " " << sensor_msg.yacc << " " << sensor_msg.zacc <<std::endl;
+
         Vector3d gyro=getGyro(fgData);
         sensor_msg.xgyro = gyro[0]+gyro_nois*standard_normal_distribution_(random_generator_);
         sensor_msg.ygyro = gyro[1]+gyro_nois*standard_normal_distribution_(random_generator_);
@@ -125,17 +136,34 @@ Vector3d VehicleState::getGyro(const fgOutputData& fgData)
         Quaterniond heading(Vector3d(0,0,1),degToRad(fgData.heading_deg));
         Quaterniond bodyRot=heading*pitch*roll;        
 
-        Quaterniond rollRate(Vector3d(1,0,0), -degToRad(fgData.rateRoll_degps));
-        Quaterniond pitchRate(Vector3d(0,1,0), degToRad(fgData.ratePitch_degps));
-        Quaterniond headingRate(Vector3d(0,0,1),degToRad(fgData.rateYaw_degps));
-        Quaterniond omega=rollRate*pitchRate*headingRate;
+//        Quaterniond rollRate(Vector3d(1,0,0), degToRad(fgData.rateRoll_degps));
+//        Quaterniond pitchRate(Vector3d(0,1,0), degToRad(fgData.ratePitch_degps));
+//        Quaterniond headingRate(Vector3d(0,0,1),degToRad(fgData.rateYaw_degps));
+//        Quaterniond omega=headingRate*pitchRate*rollRate;
 
-        Vector3d ret;
-        ret[0]=degToRad(fgData.rateRoll_degps);
+        Vector3d rollRateP(degToRad(fgData.rateRoll_degps),0,0);
+
+        Vector3d pitchRate(0,degToRad(fgData.ratePitch_degps),0);
+        Vector3d pitchRateP=bodyRot.RotateVectorReverse(heading.RotateVector(pitchRate));
+
+        Vector3d headingRate(0,0,degToRad(fgData.rateYaw_degps));
+        Vector3d headingRateP=bodyRot.RotateVectorReverse(headingRate);
+
+//        double angle;
+//        Vector3d vomega;
+//        omega.ToAxis(vomega,angle);
+//        vomega=vomega.Normalize();
+//        vomega=angle*vomega;
+
+        Vector3d ret=rollRateP+pitchRateP+headingRateP;
+//        ret[0]=-ret[0];
+//        ret[1]=-ret[1];
+//        ret[2]=-ret[2];
+/*        ret[0]=degToRad(fgData.rateRoll_degps);
         ret[1]=degToRad(fgData.ratePitch_degps)/std::cos(degToRad(fgData.roll_deg));
-        ret[2]=0;
+        ret[2]=0;*/
         
-        std::cout << ret[0] << " " << ret[1] << " " << ret[2] << std::endl;
+        //std::cout << ret[0] << " " << ret[1] << " " << ret[2] << std::endl;
 
         return ret;
 }
@@ -172,6 +200,10 @@ Vector3d VehicleState::getMagneticField(const fgOutputData& fgData)
 		return mag1;
 }
 
+double VehicleState::ftpssTomG(double fpss)
+{
+    return fpss*1000/ 32.2; //wtf ?
+}
 
 double VehicleState::ftToM(double ft)
 {

@@ -65,6 +65,7 @@ public:
     private:
         double ftToM(double ft);
         double degToRad(double deg);
+        double ftpssTomG(double fpss);
 
 		void setSensorMsg(const fgOutputData& fgData);
 		void setGPSMsg(const fgOutputData& fgData);
@@ -75,6 +76,7 @@ public:
         Vector3d getGyro(const fgOutputData& fgData);
 		double getDiffPressure(const fgOutputData& fgData, double localTemp);
 
+        double lastTime;
 
 		double acc_nois;
 		double gyro_nois;
