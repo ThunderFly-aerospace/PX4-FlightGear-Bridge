@@ -3,6 +3,7 @@
 #include "geo_mag_declination.h"
 
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 
@@ -19,12 +20,43 @@ VehicleState::VehicleState()
     diff_pressure_nois=0.01;
 }
 
+void VehicleState::setPXControls(const mavlink_hil_actuator_controls_t& controls)
+{
+    bool armed = (controls.mode & MAV_MODE_FLAG_SAFETY_ARMED);
+
+    /*
+    for(int i=0;i<16;i++)
+    {
+        std::cout  << std::setprecision(1) << controls.controls[i] << " ";
+    }
+
+    std::cout << std::endl;
+
+    */
+
+    if(armed)
+    {
+        FGControls.aileron=-controls.controls[5];
+        FGControls.elevator=-controls.controls[7];
+        FGControls.rudder=controls.controls[2];
+        FGControls.throttle=controls.controls[4];
+    }
+    else
+    {
+        FGControls.aileron=0;
+        FGControls.elevator=0;
+        FGControls.rudder=0;
+        FGControls.throttle=0;
+    }
+}
+
+
 void VehicleState::setFGData(const fgOutputData& fgData)
 {
     double freq=1.0/(fgData.elapsed_sec-lastTime);
     lastTime=fgData.elapsed_sec;
 
-    if(freq<40)
+    if(freq<20)
     {
         std::cout << "Freq: "<< freq <<std::endl;
     }

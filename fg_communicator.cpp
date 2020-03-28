@@ -10,15 +10,22 @@ FGCommunicator::FGCommunicator(VehicleState * v)
 int FGCommunicator::Init()
 {
 
-    fgSock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    fgSockOut = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
-    memset((char *) &fg_addr, 0, sizeof(fg_addr));
-    my_addr.sin_family = AF_INET;
-    my_addr.sin_addr.s_addr=htonl(INADDR_LOOPBACK);
-    my_addr.sin_port = htons(4444);
+    memset((char *) &fg_addr_out, 0, sizeof(fg_addr_out));
+    memset((char *) &my_addr_out, 0, sizeof(my_addr_out));
+    my_addr_out.sin_family = AF_INET;
+    my_addr_out.sin_addr.s_addr=htonl(INADDR_LOOPBACK);
+    my_addr_out.sin_port = htons(4444);
+
+    fgSockIn=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    memset((char *) &fg_addr_in, 0, sizeof(my_addr_out));
+    fg_addr_in.sin_family = AF_INET;
+    fg_addr_in.sin_addr.s_addr=htonl(INADDR_LOOPBACK);
+    fg_addr_in.sin_port = htons(4445);
 
 	//bind socket to port
-	if( bind(fgSock , (struct sockaddr*) &my_addr, sizeof(my_addr) ) == -1)
+	if( bind(fgSockOut , (struct sockaddr*) &my_addr_out, sizeof(my_addr_out) ) == -1)
 	{
 		printf("Cannot bind socket");
         return -1;
@@ -42,12 +49,26 @@ void FGCommunicator::swap64(void *p)
 
 int FGCommunicator::Clean()
 {
-	close(fgSock);
+	close(fgSockOut);
+    close(fgSockIn);
 	return 0;
 }
 
 int FGCommunicator::Send()
 {
+    fgInputData inputPacket=this->vehicle->FGControls;
+    swap64(&inputPacket.aileron);
+    swap64(&inputPacket.elevator);
+    swap64(&inputPacket.rudder);
+    swap64(&inputPacket.throttle);
+
+    if(sendto(fgSockIn, (void *)&inputPacket,sizeof(inputPacket), 0,
+               (struct sockaddr*) &fg_addr_in, sizeof(fg_addr_in)) != sizeof(inputPacket))
+    {
+        printf("Error send packet");
+        return -1;
+    }
+
 	return 0;
 }
 
@@ -56,8 +77,8 @@ int FGCommunicator::Recieve()
 
 	struct fgOutputData outputPacket;
 
-    unsigned int len=sizeof(fg_addr);
-    if(recvfrom(fgSock, (void *)&outputPacket, sizeof(outputPacket), 0, (struct sockaddr*) &fg_addr, &len) == -1)
+    unsigned int len=sizeof(fg_addr_out);
+    if(recvfrom(fgSockOut, (void *)&outputPacket, sizeof(outputPacket), 0, (struct sockaddr*) &fg_addr_out, &len) == -1)
     {
     	printf("Error recieve packet");
 		return -1;

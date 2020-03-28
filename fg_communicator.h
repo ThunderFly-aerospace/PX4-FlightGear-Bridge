@@ -25,8 +25,10 @@ class FGCommunicator
 
 private:
 	VehicleState * vehicle;
-    struct sockaddr_in  fg_addr,my_addr;
-    int fgSock;
+    struct sockaddr_in  fg_addr_out,my_addr_out;
+    int fgSockOut;
+    int fgSockIn;
+    struct sockaddr_in  fg_addr_in;
 
 
 	void swap64(void *p);

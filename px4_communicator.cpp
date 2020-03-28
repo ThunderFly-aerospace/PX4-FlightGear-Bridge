@@ -89,19 +89,15 @@ int PX4Communicator::Send()
 
 int PX4Communicator::Recieve(bool blocking)
 {
-    return 0;
-}
 
-int PX4Communicator::Test()
-{
-
-        /*fprintf(stderr,"Sended. Time %ld\n",time);
+        mavlink_message_t msg;
+        uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
 
         struct pollfd fds[1] = {};
         fds[0].fd = px4MavlinkSock;
         fds[0].events = POLLIN;
 
-        int p=poll(&fds[0], 1, (blocking==1?-1:1000));
+        int p=poll(&fds[0], 1, (blocking?-1:10));
         if(p<0)
             fprintf(stderr,"Pool error\n");
 
@@ -122,18 +118,26 @@ int PX4Communicator::Test()
                     {
                       if (mavlink_parse_char(MAVLINK_COMM_0, buffer[i], &msg, &status))
                       {
-                            fprintf(stderr,"Parsed msg\n");
+                            //fprintf(stderr,"Parsed msg\n");
                             if(msg.msgid==MAVLINK_MSG_ID_HIL_ACTUATOR_CONTROLS)
                             {
-                                fprintf(stderr,"Got Acuitator\n");
-                                blocking=1;
+                                    mavlink_hil_actuator_controls_t controls;
+                                    mavlink_msg_hil_actuator_controls_decode(&msg, &controls);
+                                    vehicle->setPXControls(controls);
                             }
                       }
                     }
                 }
             }  
-        }      
-  }*/
+        }  
+
+    return 0;
+}
+
+int PX4Communicator::Test()
+{
+
+    
 
 	return 0;
 }

@@ -45,7 +45,13 @@ struct fgOutputData {
 
 } __attribute__((packed));
 
+struct fgInputData {
+		double          aileron;
+        double          elevator;
+        double          rudder;
+        double          throttle;
 
+} __attribute__((packed));
 
 
 class VehicleState
@@ -55,12 +61,14 @@ public:
 
     mavlink_hil_sensor_t sensor_msg;
     mavlink_hil_gps_t hil_gps_msg;
-    mavlink_hil_state_quaternion_t hil_state_quat;
+    fgInputData FGControls;
+
     std::default_random_engine random_generator_;
     std::normal_distribution<double> standard_normal_distribution_;
 
 	VehicleState(); 
 	void setFGData(const fgOutputData& fgData);
+    void setPXControls(const mavlink_hil_actuator_controls_t& controls);
 
     private:
         double ftToM(double ft);

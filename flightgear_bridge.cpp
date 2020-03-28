@@ -30,8 +30,8 @@ int main(int argc, char ** argv)
 	{
 		fg.Recieve();
 		px4.Send();
-		//px4.Recieve(false);
-		//fg.Send();
+		px4.Recieve(false);
+		fg.Send();
 	}
 
 	cerr << "Bridge Exiting" <<endl;

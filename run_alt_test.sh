@@ -13,8 +13,9 @@ $FGFS \
     --aircraft=Rascal110-JSBSim \
     --timeofday=noon \
     --disable-sound \
-    --generic=socket,out,1000,127.0.0.1,4444,udp,px4bridge \
     --telnet=4443 \
+    --generic=socket,out,1000,127.0.0.1,4444,udp,px4bridge \
+    --generic=socket,in,1000,,4445,udp,px4bridge \
     --disable-terrasync \
 	--disable-splash-screen \
 	--model-hz=120 \

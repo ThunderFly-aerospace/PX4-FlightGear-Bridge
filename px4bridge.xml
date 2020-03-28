@@ -155,6 +155,31 @@
 	</chunk>
 
     </output>
+
+    <input>
+      <binary_mode>true</binary_mode>
+      <chunk>
+	    <name>aileron</name>
+	    <type>double</type>
+	    <node>/controls/flight/aileron</node>
+      </chunk> 
+      <chunk>
+	    <name>elevator</name>
+	    <type>double</type>
+	    <node>/controls/flight/elevator</node>
+      </chunk> 
+      <chunk>
+	    <name>rudder</name>
+	    <type>double</type>
+	    <node>/controls/flight/rudder</node>
+      </chunk> 
+      <chunk>
+	    <name>throttle</name>
+	    <type>double</type>
+	    <node>/controls/engines/engine/throttle</node>
+      </chunk> 
+    </input>
+
   </generic>
 </PropertyList>
 
