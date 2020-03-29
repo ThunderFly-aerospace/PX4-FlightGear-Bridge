@@ -13,7 +13,7 @@ int main(int argc, char ** argv)
 {
     cerr << "I'm Mavlink to FlightGear Bridge" <<endl;;
 
-    int delay_uS=5000;
+    int delay_us=5000;
     bool havePxData=false;
     bool haveFGData=false;
     bool sendEveryStep=true;
@@ -51,7 +51,7 @@ int main(int argc, char ** argv)
         if(px4Recved || (havePxData && sendEveryStep))
     		fg.Send();
 
-        usleep(delay_uS);
+        usleep(delay_us);
 	}
 
 	cerr << "Bridge Exiting" <<endl;

@@ -14,6 +14,7 @@ target_include_directories(flightgear_bridge
                 BEFORE
                 PUBLIC ${PX4_SOURCE_DIR}/mavlink/include)
 
-target_compile_options(flightgear_bridge PUBLIC -fexceptions)
+target_compile_options(flightgear_bridge PUBLIC -fexceptions -Wno-cast-align -Wno-address-of-packed-member)
 
 target_link_libraries(flightgear_bridge ignition-math4::ignition-math4)
+
