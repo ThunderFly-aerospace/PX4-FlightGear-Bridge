@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cstdlib>
+#include <cstring>
 
 #include <time.h>
 
@@ -16,11 +18,33 @@ int main(int argc, char ** argv)
     int delay_us=5000;
     bool havePxData=false;
     bool haveFGData=false;
-    bool sendEveryStep=true;
+    bool sendEveryStep=true;//dont do this now - send to FG broken datain inside vehicleState...
 
     cerr << "Targed Bridge Freq: " << 1000000.0/delay_us << ", send data every step: " << sendEveryStep << std::endl;
 
-	VehicleState vehicle;
+    //parse parameters
+    if(argc < 2)
+    {
+        cerr << "Use: bridge ControlCount ControlIndex0 ControlP0 ControlIndex1 ControlP1 ..." <<endl;
+    }
+
+    int controlsCount=atoi(argv[1]);
+    
+    int *contolsMap= new int[controlsCount];
+    double *controlsP= new double[controlsCount];
+    for(int i=0;i<controlsCount;i++)
+    {
+        contolsMap[i]=atoi(argv[2+2*i]);
+        controlsP[i]=atof(argv[2+2*i+1]);
+    }
+
+    cout << controlsCount <<endl;
+    for(int i=0;i<controlsCount;i++)
+    {
+        cout <<"  "<< contolsMap[i] <<  "   " <<controlsP[i] <<endl;
+    }
+
+	VehicleState vehicle(controlsCount,contolsMap,controlsP);
 	PX4Communicator px4(&vehicle);
 	FGCommunicator fg(&vehicle);
 	
@@ -53,9 +77,13 @@ int main(int argc, char ** argv)
 
         usleep(delay_us);
 	}
+        
 
 	cerr << "Bridge Exiting" <<endl;
 	fg.Clean();
 	px4.Clean();
+
+    delete [] contolsMap;
+    delete [] controlsP;
 
 }

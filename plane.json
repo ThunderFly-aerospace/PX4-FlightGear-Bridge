@@ -1,0 +1,10 @@
+{
+    "FgModel":"Rascal110-JSBSim",
+    "Url":"http://mirrors.ibiblio.org/flightgear/ftp/Aircraft/Rascal.zip",
+    "Controls": [
+                ["5","/controls/flight/aileron","-1"],
+                ["7","/controls/flight/elevator","-1"],
+                ["2","/controls/flight/rudder","1"],
+                ["4","/controls/engines/engine/throttle","1"]
+                ]
+}

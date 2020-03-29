@@ -182,28 +182,3 @@
 
   </generic>
 </PropertyList>
-
-<!--		//Time
-		double          elapsed_sec;
-
-        // GPS
-        double          latitude_deg;
-        double          longitude_deg;
-        double          altitude_ft;
-
-        //orientation
-        double          roll_deg;
-        double          pitch_deg;
-        double          heading_deg;
-
-        double          velocityN_fps;
-        double          velocityE_fps;
-		double          airspeed_kt;
-
-        // IMU
-        double          accelX_fps;
-        double          accelY_fps;
-        double          accelZ_fps;
-        double          rateRoll_degps;
-        double          ratePitch_degps;
-        double          rateYaw_degps;-->

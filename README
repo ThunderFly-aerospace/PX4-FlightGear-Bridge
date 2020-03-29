@@ -2,10 +2,10 @@
 
 Jak spusti vyvojovou verzi:
 
-1) na systému si zprovozněte FlightGear - klidně distribuční
-2) přidejte si do něj letadlo Rascal: http://wiki.flightgear.org/Rascal_110 (vpravo je download)
-3) způsobte aby šlo zaposivat do složky s protokoly ve FGDatech: (Na debianu:  /usr/share/games/flightgear/Protocol)
-4) v PX4 ve větvi flightgear si upravte skript PX4Firmware/Tools/flightgear_bridge/FG_run.sh tak aby odpovídal vaší instalaci FG -- jen proměnne(FGFS a PROTOCOL)
+1) na systému si zprovozněte FlightGear - klidně distribuční (tak aby v PATH bylo fgfs)
+2) přidejte si do něj letadlo Rascal: http://wiki.flightgear.org/Rascal_110 (vpravo je download) -- (autodownload comming soon)
+3) způsobte aby šlo zaposivat do složky Protocol v datech FlightGearu (/usr/share/games/flightgear/Protocols)
+4) pokud js složka s daty FG jiná než /usr/share/games/flightgear/ nastavte proměnou prostředí FGDATA na tuto složku
 6) spustě si QgroundControl
 7) ve složce PX4Firmware spusťte: make px4_sitl flightgear_plane
 

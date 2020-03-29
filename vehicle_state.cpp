@@ -7,8 +7,15 @@
 
 using namespace std;
 
-VehicleState::VehicleState()
+VehicleState::VehicleState(int cCount, const int *cMap, const double *cP)
 {
+
+    this->controlsCount=cCount;
+    this->controlsMap=cMap;
+    this->controlsP=cP;
+
+    this->FGControls=new double[controlsCount];
+
 	standard_normal_distribution_ = std::normal_distribution<double>(0.0f, 1.0f);
 
 	acc_nois=0.0001;
@@ -20,33 +27,20 @@ VehicleState::VehicleState()
     diff_pressure_nois=0.01;
 }
 
+VehicleState::~VehicleState()
+{
+    delete [] FGControls;
+}
+
 void VehicleState::setPXControls(const mavlink_hil_actuator_controls_t& controls)
 {
     bool armed = (controls.mode & MAV_MODE_FLAG_SAFETY_ARMED);
-
-    /*
-    for(int i=0;i<16;i++)
+    for(int c=0;c<controlsCount;c++)
     {
-        std::cout  << std::setprecision(1) << controls.controls[i] << " ";
-    }
-
-    std::cout << std::endl;
-
-    */
-
-    if(armed)
-    {
-        FGControls.aileron=-controls.controls[5];
-        FGControls.elevator=-controls.controls[7];
-        FGControls.rudder=controls.controls[2];
-        FGControls.throttle=controls.controls[4];
-    }
-    else
-    {
-        FGControls.aileron=0;
-        FGControls.elevator=0;
-        FGControls.rudder=0;
-        FGControls.throttle=0;
+        if(armed)
+            FGControls[c]=controlsP[c]*(double)controls.controls[controlsMap[c]];
+        else
+            FGControls[c]=0;
     }
 }
 

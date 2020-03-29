@@ -56,14 +56,12 @@ int FGCommunicator::Clean()
 
 int FGCommunicator::Send()
 {
-    fgInputData inputPacket=this->vehicle->FGControls;
-    swap64(&inputPacket.aileron);
-    swap64(&inputPacket.elevator);
-    swap64(&inputPacket.rudder);
-    swap64(&inputPacket.throttle);
+    for(int c=0;c<vehicle->controlsCount;c++)
+        swap64(&(vehicle->FGControls[c]));//extremply dangerous
 
-    if(sendto(fgSockIn, (void *)&inputPacket,sizeof(inputPacket), 0,
-               (struct sockaddr*) &fg_addr_in, sizeof(fg_addr_in)) != sizeof(inputPacket))
+    int size=vehicle->controlsCount*sizeof(double);
+    if(sendto(fgSockIn,(void *)(vehicle->FGControls),size, 0,
+               (struct sockaddr*) &fg_addr_in, sizeof(fg_addr_in)) != size)
     {
         printf("Error send packet");
         return -1;
