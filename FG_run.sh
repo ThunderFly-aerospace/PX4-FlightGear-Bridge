@@ -10,7 +10,7 @@ PROTOCOL=/usr/local/flightgear/share/flightgear/Protocol
 
 cp px4bridge.xml $PROTOCOL
 $FGFS \
-    --aircraft=TF-G1 \
+    --aircraft=Rascal110-JSBSim \
     --timeofday=noon \
     --disable-sound \
     --telnet=4443 \
