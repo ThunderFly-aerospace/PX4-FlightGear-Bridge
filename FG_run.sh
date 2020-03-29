@@ -47,9 +47,6 @@ $FGFS \
 	--disable-rembrandt \
 	--disable-horizon-effect
 	
-
-echo "HOWNO"
-
 #./a.out
 
 #    --generic=socket,out,10,127.0.0.1,4444,udp,px4bridge \

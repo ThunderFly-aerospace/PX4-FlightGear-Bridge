@@ -12,6 +12,14 @@ using namespace std;
 int main(int argc, char ** argv)
 {
     cerr << "I'm Mavlink to FlightGear Bridge" <<endl;;
+
+    int delay_uS=5000;
+    bool havePxData=false;
+    bool haveFGData=false;
+    bool sendEveryStep=true;
+
+    cerr << "Targed Bridge Freq: " << 1000000.0/delay_us << ", send data every step: " << sendEveryStep << std::endl;
+
 	VehicleState vehicle;
 	PX4Communicator px4(&vehicle);
 	FGCommunicator fg(&vehicle);
@@ -30,11 +38,20 @@ int main(int argc, char ** argv)
 
 	while(1)
 	{
-		if(fg.Recieve(false)==1)
-    		px4.Send();
-		if(px4.Recieve(false)==1)
+        
+        bool fgRecved=(fg.Recieve(false)==1);
+		if(fgRecved)
+            haveFGData=true;
+        if(fgRecved || (haveFGData && sendEveryStep))
+            px4.Send();
+        
+        bool px4Recved=(px4.Recieve(false)==1);
+		if(px4Recved)
+            havePxData=true;
+        if(px4Recved || (havePxData && sendEveryStep))
     		fg.Send();
-        usleep(5000);
+
+        usleep(delay_uS);
 	}
 
 	cerr << "Bridge Exiting" <<endl;
