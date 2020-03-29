@@ -97,13 +97,13 @@ int PX4Communicator::Recieve(bool blocking)
         fds[0].fd = px4MavlinkSock;
         fds[0].events = POLLIN;
 
-        int p=poll(&fds[0], 1, (blocking?-1:10));
+        int p=poll(&fds[0], 1, (blocking?-1:2));
         if(p<0)
             fprintf(stderr,"Pool error\n");
 
         if(p==0)
         {
-            fprintf(stderr,"No data\n");
+            //fprintf(stderr,"No PX data\n");
         }
         else
         {
@@ -124,9 +124,10 @@ int PX4Communicator::Recieve(bool blocking)
                                     mavlink_hil_actuator_controls_t controls;
                                     mavlink_msg_hil_actuator_controls_decode(&msg, &controls);
                                     vehicle->setPXControls(controls);
+                                    return 1;
                             }
                       }
-                    }
+                    }                    
                 }
             }  
         }  

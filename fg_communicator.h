@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <poll.h>
 
 
 union temp64 {
@@ -38,7 +39,7 @@ public:
 	int Clean();
 
 	int Send();
-	int Recieve();
+	int Recieve(bool blocking);
 	
 };
 

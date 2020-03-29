@@ -1,9 +1,11 @@
 #include <iostream>
 
+#include <time.h>
 
 #include "px4_communicator.h"
 #include "fg_communicator.h"
 #include "vehicle_state.h"
+
 
 using namespace std;
 
@@ -28,10 +30,11 @@ int main(int argc, char ** argv)
 
 	while(1)
 	{
-		fg.Recieve();
-		px4.Send();
-		px4.Recieve(false);
-		fg.Send();
+		if(fg.Recieve(false)==1)
+    		px4.Send();
+		if(px4.Recieve(false)==1)
+    		fg.Send();
+        usleep(5000);
 	}
 
 	cerr << "Bridge Exiting" <<endl;

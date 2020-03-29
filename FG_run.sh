@@ -10,7 +10,7 @@ PROTOCOL=/usr/local/flightgear/share/flightgear/Protocol
 
 cp px4bridge.xml $PROTOCOL
 $FGFS \
-    --aircraft=Rascal110-JSBSim \
+    --aircraft=TF-G1 \
     --timeofday=noon \
     --disable-sound \
     --telnet=4443 \
@@ -39,7 +39,7 @@ $FGFS \
 	--prop:/sim/rendering/multi-sample-buffers=1 \
 	--prop:/sim/rendering/multi-samples=2 \
 	--prop:/sim/rendering/draw-mask/clouds=false \
-	--prop:/sim/rendering/draw-mask/aircraft=false \
+	--prop:/sim/rendering/draw-mask/aircraft=true \
 	--prop:/sim/rendering/draw-mask/models=false \
 	--prop:/sim/rendering/draw-mask/terrain=true \
 	--disable-random-vegetation \
@@ -48,7 +48,7 @@ $FGFS \
 	--disable-horizon-effect
 	
 
-
+echo "HOWNO"
 
 #./a.out
 

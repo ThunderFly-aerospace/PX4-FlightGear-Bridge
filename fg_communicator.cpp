@@ -72,50 +72,70 @@ int FGCommunicator::Send()
 	return 0;
 }
 
-int FGCommunicator::Recieve()
+int FGCommunicator::Recieve(bool blocking)
 {
 
 	struct fgOutputData outputPacket;
+    struct pollfd fds[1] = {};
+    fds[0].fd = fgSockOut;
+    fds[0].events = POLLIN;
 
-    unsigned int len=sizeof(fg_addr_out);
-    if(recvfrom(fgSockOut, (void *)&outputPacket, sizeof(outputPacket), 0, (struct sockaddr*) &fg_addr_out, &len) == -1)
+    int p=poll(&fds[0], 1, (blocking?-1:2));
+    if(p<0)
+        fprintf(stderr,"Pool error\n");
+
+    if(p==0)
     {
-    	printf("Error recieve packet");
-		return -1;
+        //fprintf(stderr,"No FG data\n");
     }
     else
     {
-        swap64(&outputPacket.elapsed_sec);
+        if(fds[0].revents & POLLIN)
+        {
+            
+            unsigned int len=sizeof(fg_addr_out);
+            if(recvfrom(fgSockOut, (void *)&outputPacket, sizeof(outputPacket), 0, (struct sockaddr*) &fg_addr_out, &len) == -1)
+            {
+            	printf("Error recieve packet");
+		        return -1;
+            }
+            else
+            {
+                swap64(&outputPacket.elapsed_sec);
 
-        swap64(&outputPacket.latitude_deg);
-        swap64(&outputPacket.longitude_deg);
-        swap64(&outputPacket.altitude_ft);
+                swap64(&outputPacket.latitude_deg);
+                swap64(&outputPacket.longitude_deg);
+                swap64(&outputPacket.altitude_ft);
 
-        swap64(&outputPacket.roll_deg);
-        swap64(&outputPacket.pitch_deg);
-        swap64(&outputPacket.heading_deg);
+                swap64(&outputPacket.roll_deg);
+                swap64(&outputPacket.pitch_deg);
+                swap64(&outputPacket.heading_deg);
 
-        swap64(&outputPacket.speed_north_fps);
-        swap64(&outputPacket.speed_east_fps);
-		swap64(&outputPacket.speed_down_fps);
-		swap64(&outputPacket.airspeed_kt);
+                swap64(&outputPacket.speed_north_fps);
+                swap64(&outputPacket.speed_east_fps);
+		        swap64(&outputPacket.speed_down_fps);
+		        swap64(&outputPacket.airspeed_kt);
 
-        swap64(&outputPacket.accelX_fps);
-        swap64(&outputPacket.accelY_fps);
-        swap64(&outputPacket.accelZ_fps);
-        swap64(&outputPacket.rateRoll_degps);
-        swap64(&outputPacket.ratePitch_degps);
-        swap64(&outputPacket.rateYaw_degps);
+                swap64(&outputPacket.accelX_fps);
+                swap64(&outputPacket.accelY_fps);
+                swap64(&outputPacket.accelZ_fps);
+                swap64(&outputPacket.rateRoll_degps);
+                swap64(&outputPacket.ratePitch_degps);
+                swap64(&outputPacket.rateYaw_degps);
 
-        swap64(&outputPacket.pressure_alt_ft);
-        swap64(&outputPacket.temperature_degc);
-        swap64(&outputPacket.pressure_inhg);
-        swap64(&outputPacket.measured_total_pressure_inhg);
+                swap64(&outputPacket.pressure_alt_ft);
+                swap64(&outputPacket.temperature_degc);
+                swap64(&outputPacket.pressure_inhg);
+                swap64(&outputPacket.measured_total_pressure_inhg);
 
-        //fprintf(stderr,"FG data recieved\n");
+                //fprintf(stderr,"FG data recieved\n");
 
-		vehicle->setFGData(outputPacket);
-    }
+		        vehicle->setFGData(outputPacket);
+
+                return 1;
+            }
+        }  
+    }  
 
     return 0;
 }
