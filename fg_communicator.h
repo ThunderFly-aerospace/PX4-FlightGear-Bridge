@@ -31,10 +31,13 @@ private:
     int fgSockIn;
     struct sockaddr_in  fg_addr_in;
 
+    double *sendBuff;
+
 
 	void swap64(void *p);
 public: 
 	FGCommunicator(VehicleState * v);
+    ~FGCommunicator();
 	int Init();
 	int Clean();
 

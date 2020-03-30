@@ -4,8 +4,13 @@
 FGCommunicator::FGCommunicator(VehicleState * v)
 {
 	this->vehicle=v;
+    sendBuff=new double[v->controlsCount];
 }
 
+FGCommunicator::~FGCommunicator()
+{
+    delete [] sendBuff;
+}
 
 int FGCommunicator::Init()
 {
@@ -57,10 +62,13 @@ int FGCommunicator::Clean()
 int FGCommunicator::Send()
 {
     for(int c=0;c<vehicle->controlsCount;c++)
-        swap64(&(vehicle->FGControls[c]));//extremply dangerous
+    {
+        sendBuff[c]=vehicle->FGControls[c];
+        swap64(&(sendBuff[c]));
+    }
 
     int size=vehicle->controlsCount*sizeof(double);
-    if(sendto(fgSockIn,(void *)(vehicle->FGControls),size, 0,
+    if(sendto(fgSockIn,(void *)(sendBuff),size, 0,
                (struct sockaddr*) &fg_addr_in, sizeof(fg_addr_in)) != size)
     {
         printf("Error send packet");
