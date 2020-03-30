@@ -146,7 +146,7 @@ void VehicleState::setSensorMsg(const fgOutputData& fgData)
         sensor_msg.pressure_alt = ftToM(fgData.pressure_alt_ft)+baro_alt_nois*standard_normal_distribution_(random_generator_);
 
         sensor_msg.diff_pressure = (fgData.measured_total_pressure_inhg-fgData.pressure_inhg)*3386.39/100.0+diff_pressure_nois*standard_normal_distribution_(random_generator_) ;
-        sensor_msg.fields_updated = 4095;
+        sensor_msg.fields_updated = (uint16_t)0x1FFF;
 
 
 }
