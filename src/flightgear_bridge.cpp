@@ -18,7 +18,7 @@ int main(int argc, char ** argv)
     int delay_us=5000;
     bool havePxData=false;
     bool haveFGData=false;
-    bool sendEveryStep=true;//dont do this now - send to FG broken datain inside vehicleState...
+    bool sendEveryStep=true;
 
     cerr << "Targed Bridge Freq: " << 1000000.0/delay_us << ", send data every step: " << sendEveryStep << std::endl;
 

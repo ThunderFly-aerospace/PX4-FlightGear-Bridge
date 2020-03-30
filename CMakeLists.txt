@@ -3,11 +3,11 @@
 find_package(ignition-math4 REQUIRED)
 
 add_executable(flightgear_bridge 
-               flightgear_bridge.cpp
-			   px4_communicator.cpp
-			   fg_communicator.cpp
-			   vehicle_state.cpp
-			   geo_mag_declination.cpp
+               src/flightgear_bridge.cpp
+			   src/px4_communicator.cpp
+			   src/fg_communicator.cpp
+			   src/vehicle_state.cpp
+			   src/geo_mag_declination.cpp
 			   )
 
 target_include_directories(flightgear_bridge 

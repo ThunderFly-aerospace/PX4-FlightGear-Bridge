@@ -56,7 +56,6 @@ void VehicleState::setFGData(const fgOutputData& fgData)
     }
 
 	setSensorMsg(fgData);
-    //setStateQuatMsg(fgData);
     setGPSMsg(fgData);
 }
 
@@ -79,63 +78,21 @@ void VehicleState::setGPSMsg(const fgOutputData& fgData)
     hil_gps_msg.cog =cog*100; 
     hil_gps_msg.satellites_visible = 10;
 
-   // std::cerr<< fgData.speed_north_fps <<"   " << fgData.speed_east_fps << std::endl; 
-
 }
-
-/*void VehicleState::setStateQuatMsg(const fgOutputData& fgData)
-{
-      hil_state_quat.time_usec = fgData.elapsed_sec*1e6;
-
-      Quaterniond bodyRot(degToRad(fgData.roll_deg),degToRad(fgData.pitch_deg),degToRad(fgData.heading_deg));
-
-      hil_state_quat.attitude_quaternion[0] = bodyRot.W();
-      hil_state_quat.attitude_quaternion[1] = bodyRot.X();
-      hil_state_quat.attitude_quaternion[2] = bodyRot.Y();
-      hil_state_quat.attitude_quaternion[3] = bodyRot.Z();
-
-      hil_state_quat.rollspeed = degToRad(fgData.rateRoll_degps);
-      hil_state_quat.pitchspeed = degToRad(fgData.ratePitch_degps);
-      hil_state_quat.yawspeed =  degToRad(fgData.rateYaw_degps);
-
-      hil_state_quat.lat = fgData.latitude_deg * 1e7;
-      hil_state_quat.lon = fgData.longitude_deg * 1e7;
-      hil_state_quat.alt = ftToM(fgData.altitude_ft) * 100;
-
-      //TODO:
-      hil_state_quat.vx = 0;
-      hil_state_quat.vy = 0;
-      hil_state_quat.vz = 0;
-
-      //TODO:
-      // assumed indicated airspeed due to flow aligned with pitot (body x)
-      hil_state_quat.ind_airspeed = 0;
-      hil_state_quat.true_airspeed = 0;  //no wind simulated
-
-      hil_state_quat.xacc = ftToM(fgData.accelX_fps)*1000;
-      hil_state_quat.yacc = ftToM(fgData.accelY_fps)*1000;
-      hil_state_quat.zacc = ftToM(fgData.accelZ_fps)*1000;
-
-}*/
 
 void VehicleState::setSensorMsg(const fgOutputData& fgData)
 {
 	    sensor_msg.time_usec = fgData.elapsed_sec*1e6;
  
-        //akcelerometr vypadá hodnotově také v pořádku
         sensor_msg.xacc = ftToM(fgData.accelX_fps)+acc_nois*standard_normal_distribution_(random_generator_);
         sensor_msg.yacc = ftToM(fgData.accelY_fps)+acc_nois*standard_normal_distribution_(random_generator_);
         sensor_msg.zacc = ftToM(fgData.accelZ_fps)+acc_nois*standard_normal_distribution_(random_generator_);
-
-        //if(sensor_msg.xacc<-100 || sensor_msg.yacc<-100 || sensor_msg.zacc<-100)
-         //   std::cout <<sensor_msg.xacc << " " << sensor_msg.yacc << " " << sensor_msg.zacc <<std::endl;
 
         Vector3d gyro=getGyro(fgData);
         sensor_msg.xgyro = gyro[0]+gyro_nois*standard_normal_distribution_(random_generator_);
         sensor_msg.ygyro = gyro[1]+gyro_nois*standard_normal_distribution_(random_generator_);
         sensor_msg.zgyro = gyro[2]+gyro_nois*standard_normal_distribution_(random_generator_);
 
-        //magnetometr davva stejne vysledky jako Gazebo 
 		Vector3d mag_l=getMagneticField(fgData);
         sensor_msg.xmag = mag_l[0]+mag_nois*standard_normal_distribution_(random_generator_);
         sensor_msg.ymag = mag_l[1]+mag_nois*standard_normal_distribution_(random_generator_);
@@ -154,18 +111,10 @@ void VehicleState::setSensorMsg(const fgOutputData& fgData)
 Vector3d VehicleState::getGyro(const fgOutputData& fgData)
 {
 
-      //  std::cout << fgData.rateRoll_degps << " " << fgData.ratePitch_degps << " " << fgData.rateYaw_degps << std::endl;
-
-
         Quaterniond roll(Vector3d(1,0,0), degToRad(fgData.roll_deg));
         Quaterniond pitch(Vector3d(0,1,0), degToRad(fgData.pitch_deg));
         Quaterniond heading(Vector3d(0,0,1),degToRad(fgData.heading_deg));
         Quaterniond bodyRot=heading*pitch*roll;        
-
-//        Quaterniond rollRate(Vector3d(1,0,0), degToRad(fgData.rateRoll_degps));
-//        Quaterniond pitchRate(Vector3d(0,1,0), degToRad(fgData.ratePitch_degps));
-//        Quaterniond headingRate(Vector3d(0,0,1),degToRad(fgData.rateYaw_degps));
-//        Quaterniond omega=headingRate*pitchRate*rollRate;
 
         Vector3d rollRateP(degToRad(fgData.rateRoll_degps),0,0);
 
@@ -175,22 +124,7 @@ Vector3d VehicleState::getGyro(const fgOutputData& fgData)
         Vector3d headingRate(0,0,degToRad(fgData.rateYaw_degps));
         Vector3d headingRateP=bodyRot.RotateVectorReverse(headingRate);
 
-//        double angle;
-//        Vector3d vomega;
-//        omega.ToAxis(vomega,angle);
-//        vomega=vomega.Normalize();
-//        vomega=angle*vomega;
-
         Vector3d ret=rollRateP+pitchRateP+headingRateP;
-//        ret[0]=-ret[0];
-//        ret[1]=-ret[1];
-//        ret[2]=-ret[2];
-/*        ret[0]=degToRad(fgData.rateRoll_degps);
-        ret[1]=degToRad(fgData.ratePitch_degps)/std::cos(degToRad(fgData.roll_deg));
-        ret[2]=0;*/
-        
-        //std::cout << ret[0] << " " << ret[1] << " " << ret[2] << std::endl;
-
         return ret;
 }
 
@@ -216,12 +150,7 @@ Vector3d VehicleState::getMagneticField(const fgOutputData& fgData)
         Quaterniond heading(Vector3d(0,0,1),degToRad(fgData.heading_deg));
         Quaterniond bodyRot=heading*pitch*roll;
 
-       // Quaterniond bodyRot2(degToRad(fgData.roll_deg),degToRad(fgData.pitch_deg),degToRad(fgData.heading_deg));
-
         Vector3d mag1=bodyRot.RotateVectorReverse(mag_g);
-        //Vector3d mag2=bodyRot2.RotateVectorReverse(mag_g);
-
-       // cerr << mag1[0] << " " << mag1[1] << " " << mag1[2] <<endl <<mag1[0] << " " << mag1[1] << " " << mag1[2] << endl << endl;
 
 		return mag1;
 }
