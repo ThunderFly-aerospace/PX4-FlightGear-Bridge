@@ -1,6 +1,6 @@
-=== FlightGear Bridge ===
+# FlightGear Bridge
 
-How to run the development version:
+###How to run the development version:
 
 1) Install FlightGear. Flightgear should be able to run with ```fgfs```.
 2) Install required FG model ([Rascal_110](http://wiki.flightgear.org/Rascal_110)) -- (auto-download coming soon)
