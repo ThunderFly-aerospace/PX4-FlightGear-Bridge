@@ -1,3 +1,12 @@
+/**
+ * @file px4_communicator.h
+ *
+ * @author ThunderFly s.r.o., Vít Hanousek <info@thunderfly.cz>
+ * @url https://github.com/ThunderFly-aerospace
+ *
+ * PX4 communication socket.
+ */
+
 #ifndef PX4_COMMUNICATOR_H
 #define PX4_COMMUNICATOR_H
 

@@ -1,3 +1,12 @@
+/**
+ * @file vehicle_state.h
+ *
+ * @author ThunderFly s.r.o., Vít Hanousek <info@thunderfly.cz>
+ * @url https://github.com/ThunderFly-aerospace
+ *
+ * FG to PX4 messages and units transcript.
+*/
+
 #ifndef VEHICLE_STATE_H
 #define VEHICLE_STATE_H
 

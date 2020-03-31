@@ -1,3 +1,11 @@
+/**
+ * @file px4_communicator.cpp
+ *
+ * @author ThunderFly s.r.o., Vít Hanousek <info@thunderfly.cz>
+ * @url https://github.com/ThunderFly-aerospace
+ *
+ * PX4 communication socket.
+ */
 
 #include "px4_communicator.h"
 
@@ -15,15 +23,15 @@ int PX4Communicator::Init()
     simulator_mavlink_addr.sin_family = AF_INET;
     simulator_mavlink_addr.sin_addr.s_addr=htonl(INADDR_LOOPBACK);
     simulator_mavlink_addr.sin_port = htons(4560);
-    
-     if ((listenMavlinkSock = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
+
+     if ((listenMavlinkSock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
      {
         fprintf(stderr,"Creating TCP socket failed: %s\n", strerror(errno));
       }
 
       int yes = 1;
       int result = setsockopt(listenMavlinkSock, IPPROTO_TCP, TCP_NODELAY, &yes, sizeof(yes));
-      if (result != 0) 
+      if (result != 0)
       {
         fprintf(stderr,"setsockopt failed: %s\n", strerror(errno));
       }
@@ -33,19 +41,19 @@ int PX4Communicator::Init()
       nolinger.l_linger = 0;
 
       result = setsockopt(listenMavlinkSock, SOL_SOCKET, SO_LINGER, &nolinger, sizeof(nolinger));
-      if (result != 0) 
+      if (result != 0)
       {
         fprintf(stderr,"setsockopt failed: %s\n", strerror(errno));
       }
 
-      if (bind(listenMavlinkSock, (struct sockaddr *)&simulator_mavlink_addr, sizeof(simulator_mavlink_addr)) < 0) 
+      if (bind(listenMavlinkSock, (struct sockaddr *)&simulator_mavlink_addr, sizeof(simulator_mavlink_addr)) < 0)
       {
         fprintf(stderr,"bind failed:  %s\n", strerror(errno));
       }
 
       errno = 0;
 	  result=listen(listenMavlinkSock, 0);
-      if (result < 0) 
+      if (result < 0)
       {
         fprintf(stderr,"listen failed: %s\n", strerror(errno));
       }
@@ -67,7 +75,7 @@ int PX4Communicator::Clean()
 
 int PX4Communicator::Send()
 {
-	
+
     mavlink_message_t msg;
     uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
     int packetlen;
@@ -111,7 +119,7 @@ int PX4Communicator::Recieve(bool blocking)
             {
                 unsigned int slen=sizeof(px4_mavlink_addr);
                 unsigned int len = recvfrom(px4MavlinkSock, buffer, sizeof(buffer), 0, (struct sockaddr *)&px4_mavlink_addr, &slen);
-                if (len > 0) 
+                if (len > 0)
                 {
                     mavlink_status_t status;
                     for (unsigned i = 0; i < len; ++i)
@@ -127,10 +135,10 @@ int PX4Communicator::Recieve(bool blocking)
                                     return 1;
                             }
                       }
-                    }                    
+                    }
                 }
-            }  
-        }  
+            }
+        }
 
     return 0;
 }
@@ -138,7 +146,7 @@ int PX4Communicator::Recieve(bool blocking)
 int PX4Communicator::Test()
 {
 
-    
+
 
 	return 0;
 }

@@ -1,3 +1,13 @@
+/**
+ * @file fg_communicator.cpp
+ *
+ * @author ThunderFly s.r.o., Vít Hanousek <info@thunderfly.cz>
+ * @url https://github.com/ThunderFly-aerospace
+ *
+ * FlightGear communication socket.
+ */
+
+
 #include "fg_communicator.h"
 
 
@@ -140,6 +150,3 @@ int FGCommunicator::Recieve(bool blocking)
 
 	return 0;
 }
-
-
-

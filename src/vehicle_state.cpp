@@ -1,3 +1,12 @@
+/**
+ * @file vehicle_state.cpp
+ *
+ * @author ThunderFly s.r.o., Vít Hanousek <info@thunderfly.cz>
+ * @url https://github.com/ThunderFly-aerospace
+ *
+ * FG to PX4 messages and units transcript.
+ */
+
 #include "vehicle_state.h"
 
 #include "geo_mag_declination.h"

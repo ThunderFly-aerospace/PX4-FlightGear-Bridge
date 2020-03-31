@@ -1,3 +1,12 @@
+/**
+ * @file fg_communicator.cpp
+ *
+ * @author ThunderFly s.r.o., Vít Hanousek <info@thunderfly.cz>
+ * @url https://github.com/ThunderFly-aerospace
+ *
+ * FlightGear and PX connection manager.
+ */
+
 #include <iostream>
 #include <cstdlib>
 #include <cstring>

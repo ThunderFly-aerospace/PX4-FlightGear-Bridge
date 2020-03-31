@@ -1,3 +1,12 @@
+/**
+ * @file fg_communicator.h
+ *
+ * @author ThunderFly s.r.o., Vít Hanousek <info@thunderfly.cz>
+ * @url https://github.com/ThunderFly-aerospace
+ *
+ * FlightGear communication socket.
+ */
+
 #ifndef FG_COMMUNICATOR_H
 #define FG_COMMUNICATOR_H
 
