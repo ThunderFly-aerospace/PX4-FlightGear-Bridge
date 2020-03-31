@@ -7,11 +7,11 @@
 #include <stdio.h>
 #include <mavlink/v2.0/common/mavlink.h>
 
-#include <sys/types.h>         
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
-#include <netdb.h> 
+#include <netdb.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -26,16 +26,16 @@ class PX4Communicator
 {
 
 private:
-	VehicleState * vehicle;
+	VehicleState *vehicle;
 
 
-    struct sockaddr_in  px4_mavlink_addr;
-    struct sockaddr_in  simulator_mavlink_addr;
-    int listenMavlinkSock;
-    int px4MavlinkSock;
+	struct sockaddr_in  px4_mavlink_addr;
+	struct sockaddr_in  simulator_mavlink_addr;
+	int listenMavlinkSock;
+	int px4MavlinkSock;
 
 public:
-	PX4Communicator(VehicleState * v);
+	PX4Communicator(VehicleState *v);
 	int Init();
 	int Clean();
 
