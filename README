@@ -1,12 +1,10 @@
 === FlightGear Bridge ===
 
-Jak spusti vyvojovou verzi:
+How to run the development version:
 
-1) na systému si zprovozněte FlightGear - klidně distribuční (tak aby v PATH bylo fgfs)
-2) přidejte si do něj letadlo Rascal: http://wiki.flightgear.org/Rascal_110 (vpravo je download) -- (autodownload comming soon)
-3) způsobte aby šlo zaposivat do složky Protocol v datech FlightGearu (/usr/share/games/flightgear/Protocols)
-4) pokud js složka s daty FG jiná než /usr/share/games/flightgear/ nastavte proměnou prostředí FGDATA na tuto složku
-6) spustě si QgroundControl
-7) ve složce PX4Firmware spusťte: make px4_sitl flightgear_plane
-
-
+1) Install FlightGear. Flightgear should be able to run with ```fgfs```.
+2) Install required FG model ([Rascal_110](http://wiki.flightgear.org/Rascal_110)) -- (auto-download coming soon)
+3) Set write permissions to the Protocol folder of FG (in ubuntu /usr/share/games/flightgear/Protocols)
+4) If flightgear data folder is different than ```/usr/share/games/flightgear/```, set that folder to ```FGDATA``` enviroment variable.
+5) Open ```QgroundControl```
+6) In PX4Firmware folder run: ```make px4_sitl flightgear_plane``` for plane.
