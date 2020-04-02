@@ -2,6 +2,8 @@
 
 The FlightGear alternative to the current PX4's mainstream simulator Gazebo.
 
+![screenshot](art/screenshot.png)
+
 This stand-alone application adding the possibility of the use of FlightGear simulator and was tested on the Rascal airplane and TF-G1 autogyro simulation models.
 
 It connects to FG (over UDP generic protocol) and transform the data to PX4 over TCP Mavlink packets.
