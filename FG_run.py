@@ -13,7 +13,7 @@ import subprocess
 if len(sys.argv)!=2:
     print('FG_run.py -- bad argument count')
     exit(-1)
-    
+
 filename=sys.argv[1]
 
 if not os.path.exists('./'+filename):
@@ -43,7 +43,7 @@ if not os.access(protocols, os.W_OK):
 ############################ Parse Config ######################################
 
 with open(filename) as json_file:
-    data = json.load(json_file)    
+    data = json.load(json_file)
     model=data['FgModel']
     url=data['Url']
     controls=data['Controls']
@@ -86,42 +86,44 @@ shutil.copy('px4bridge.xml',protocols+'/FGtoPX4.xml' )
 
 ############################ Run FG #############################################
 
-os.system('fgfs \
-    --aircraft='+model+' \
+parameters = ["fgfs",
+    "--aircraft=" + model,
     --timeofday=noon \
-    --disable-sound \
-    --telnet=4443 \
-    --generic=socket,out,1000,127.0.0.1,4444,udp,FGtoPX4 \
-    --generic=socket,in,1000,,4445,udp,PX4toFG \
-    --disable-terrasync \
-	--disable-splash-screen \
-	--model-hz=120 \
-	--disable-random-objects \
-	--prop:/sim/rendering/texture-compression=off \
-	--prop:/sim/rendering/quality-level=0 \
-	--prop:/sim/rendering/shaders/quality-level=0 \
-	--disable-ai-traffic \
-	--prop:/sim/ai/enabled=0 \
-	--prop:/sim/rendering/random-vegetation=0 \
-	--prop:/sim/rendering/random-buildings=0 \
-	--disable-specular-highlight \
-	--disable-ai-models \
-	--disable-clouds \
-	--disable-clouds3d \
-	--fog-fastest \
-	--visibility=5000 \
-	--disable-distance-attenuation \
-	--disable-real-weather-fetch \
-	--prop:/sim/rendering/particles=0 \
-	--prop:/sim/rendering/multi-sample-buffers=1 \
-	--prop:/sim/rendering/multi-samples=2 \
-	--prop:/sim/rendering/draw-mask/clouds=false \
-	--prop:/sim/rendering/draw-mask/aircraft=true \
-	--prop:/sim/rendering/draw-mask/models=false \
-	--prop:/sim/rendering/draw-mask/terrain=true \
-	--disable-random-vegetation \
-	--disable-random-buildings \
-	--disable-rembrandt \
-	--disable-horizon-effect & echo $! > /tmp/px4fgfspid')
+    "--timeofday=noon",
+    "--disable-sound",
+    "--telnet=4443",
+    "--generic=socket,out,1000,127.0.0.1,4444,udp,FGtoPX4",
+    "--generic=socket,in,1000,,4445,udp,PX4toFG",
+    "--disable-terrasync",
+    "--disable-splash-screen",
+    "--model-hz=120",
+    "--disable-random-objects",
+    "--prop:/sim/rendering/texture-compression=off",
+    "--prop:/sim/rendering/quality-level=0",
+    "--prop:/sim/rendering/shaders/quality-level=0",
+    "--disable-ai-traffic",
+    "--prop:/sim/ai/enabled=0",
+    "--prop:/sim/rendering/random-vegetation=0",
+    "--prop:/sim/rendering/random-buildings=0",
+    "--disable-specular-highlight",
+    "--disable-ai-models",
+    "--disable-clouds",
+    "--disable-clouds3d",
+    "--fog-fastest",
+    "--visibility=5000",
+    "--disable-distance-attenuation",
+    "--disable-real-weather-fetch",
+    "--prop:/sim/rendering/particles=0",
+    "--prop:/sim/rendering/multi-sample-buffers=1",
+    "--prop:/sim/rendering/multi-samples=2",
+    "--prop:/sim/rendering/draw-mask/clouds=false",
+    "--prop:/sim/rendering/draw-mask/aircraft=true",
+    "--prop:/sim/rendering/draw-mask/models=false",
+    "--prop:/sim/rendering/draw-mask/terrain=true",
+    "--disable-random-vegetation",
+    "--disable-random-buildings",
+    "--disable-rembrandt",
+    "--disable-horizon-effect & echo $! > /tmp/px4fgfspid"
+]
 
-
+os.system(" ".join(parameters))
