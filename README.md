@@ -15,7 +15,7 @@ It connects to FG (over UDP generic protocol) and transform the data to PX4 over
 3) Set write permissions to the Protocol folder of FG (in ubuntu /usr/share/games/flightgear/Protocols)
 4) If flightgear data folder is different than ```/usr/share/games/flightgear/```, set that folder to ```FGDATA``` enviroment variable.
 5) Open [QgroundControl](http://qgroundcontrol.com/)
-6) In PX4Firmware folder run: ```make px4_sitl flightgear_plane``` for plane or ```make px4_sitl flightgear_TF-G1``` for autogyro
+6) In PX4Firmware folder run: ```make px4_sitl_nosteplock flightgear_plane``` for plane or ```make px4_sitl_nosteplock flightgear_TF-G1``` for autogyro
 
 
 ### Credits
