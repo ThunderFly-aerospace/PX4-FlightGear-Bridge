@@ -88,7 +88,6 @@ shutil.copy('px4bridge.xml',protocols+'/FGtoPX4.xml' )
 
 parameters = ["fgfs",
     "--aircraft=" + model,
-    --timeofday=noon \
     "--timeofday=noon",
     "--disable-sound",
     "--telnet=4443",
