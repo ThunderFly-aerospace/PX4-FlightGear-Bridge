@@ -1,0 +1,8 @@
+{
+    "FgModel":"TF-R1",
+    "Url":"",
+    "Controls": [
+        ["5","/controls/engines/engine/throttle","1"],
+        ["0","/controls/flight/aileron","1"]
+    ]
+}
