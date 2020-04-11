@@ -93,7 +93,7 @@ parameters = ["fgfs",
     "--telnet=4443",
     "--generic=socket,out,1000,127.0.0.1,4444,udp,FGtoPX4",
     "--generic=socket,in,1000,,4445,udp,PX4toFG",
-    "--disable-terrasync",
+    #"--disable-terrasync",
     "--disable-splash-screen",
     "--model-hz=120",
     "--disable-random-objects",
@@ -117,7 +117,7 @@ parameters = ["fgfs",
     "--prop:/sim/rendering/multi-samples=2",
     "--prop:/sim/rendering/draw-mask/clouds=false",
     "--prop:/sim/rendering/draw-mask/aircraft=true",
-    "--prop:/sim/rendering/draw-mask/models=false",
+    "--prop:/sim/rendering/draw-mask/models=true",
     "--prop:/sim/rendering/draw-mask/terrain=true",
     "--disable-random-vegetation",
     "--disable-random-buildings",
@@ -125,4 +125,5 @@ parameters = ["fgfs",
     "--disable-horizon-effect & echo $! > /tmp/px4fgfspid"
 ]
 
+print(" ".join(parameters))
 os.system(" ".join(parameters))
