@@ -17,6 +17,12 @@ It connects to FG (over UDP generic protocol) and transform the data to PX4 over
 5) Open [QgroundControl](http://qgroundcontrol.com/)
 6) In PX4Firmware folder run: ```make px4_sitl_nosteplock flightgear_plane``` for plane or ```make px4_sitl_nosteplock flightgear_TF-G1``` for autogyro
 
+### Limitations
+
+The PX4 is connected to FlightGear thought "[generic protocol](http://wiki.flightgear.org/Generic_protocol)", which is served synchronously to the simulator graphics engine frame rate. So the PX4 gets the sensor data in frequency, depending on graphics resources and the current scene.
+In the future, the bridge can upsample the data by generating noised samples from the last known value it is a terrible way.
+
+The possible better approach is to interface the flightgear trought a [HLA](http://wiki.flightgear.org/High-Level_Architecture).
 
 ### Credits
 
