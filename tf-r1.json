@@ -1,8 +1,8 @@
 {
     "FgModel":"TF-R1",
-    "Url":"",
+    "Url":"https://github.com/ThunderFly-aerospace/FlightGear-TF-R1/archive/master.zip",
     "Controls": [
-        ["5","/controls/engines/engine/throttle","1"],
+        ["5","/controls/flight/elevator","1"],
         ["0","/controls/flight/aileron","1"]
     ]
 }
