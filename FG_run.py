@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-
 import json
 import sys
 import os
@@ -10,26 +9,44 @@ import shutil
 
 import subprocess
 
-if len(sys.argv)!=2:
+if len(sys.argv)!=3:
     print('FG_run.py -- bad argument count')
     exit(-1)
 
 filename=sys.argv[1]
+px4id=int(sys.argv[2])
 
 if not os.path.exists('./'+filename):
     print('FG_run.py -- file not found: '+filename)
     exit(-1)
 
+#get FG binary to run
+fgbin=os.getenv("FG_BINARY")
+if fgbin is None:
+    fgbin='fgfs'
 
-fgdata=os.getenv("FGDATA")
-if fgdata is None:
-    fgdata='/usr/share/games/flightgear/'
+#pick fgroot (fgdata) from flightgear
+fgroot=""
+fghelp=subprocess.check_output([fgbin, '--version']).decode("utf-8").split('\n');
+for s in fghelp:
+    if s.find("FG_ROOT")>=0:
+        fgroot=s.split('=')[1]
 
-if not os.path.exists(fgdata):
-    print('Not found FG Data directory: '+ fgdata)
+if not fgroot:
+    print('fgroot not found.. abort')
     exit(-1)
 
-protocols=fgdata+'/Protocol'
+#get FGFS MODEL dir
+fgmodelsdir=os.getenv("FG_MODELS_DIR")
+if fgmodelsdir is None:
+    fgmodelsdir=fgroot+'/Aircraft'
+
+#get FGFS EXTRA PARAMS dir
+fgargsex=os.getenv("FG_ARGS_EX")
+if fgargsex is None:
+    fgargsex=''
+
+protocols=fgroot+'/Protocol'
 if not os.access(protocols, os.W_OK):
     print('Cannot Write into direcotry: '+ protocols)
     exit(-1)
@@ -86,15 +103,16 @@ shutil.copy('px4bridge.xml',protocols+'/FGtoPX4.xml' )
 
 ############################ Run FG #############################################
 
-parameters = ["fgfs",
+parameters = [fgbin,
     "--aircraft=" + model,
+    "--fg-aircraft=" + fgmodelsdir,
+    "--airport=PHNL",
+    "--enable-terrasync",
     "--timeofday=noon",
     "--disable-sound",
-    "--telnet=4443",
-    "--generic=socket,out,1000,127.0.0.1,4444,udp,FGtoPX4",
-    "--generic=socket,in,1000,,4445,udp,PX4toFG",
-    #"--disable-terrasync",
-    "--disable-splash-screen",
+    "--telnet="+str(15400+px4id),
+    "--generic=socket,out,1000,127.0.0.1,"+str(15200+px4id)+",udp,FGtoPX4",
+    "--generic=socket,in,1000,,"+str(15300+px4id)+",udp,PX4toFG",
     "--model-hz=120",
     "--disable-random-objects",
     "--prop:/sim/rendering/texture-compression=off",

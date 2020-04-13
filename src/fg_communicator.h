@@ -75,12 +75,14 @@ private:
 
 	double *sendBuff;
 
+    const int FGOutPortBase=15200;
+    const int FGInPortBase=15300;
 
 	void swap64(void *p);
 public:
 	FGCommunicator(VehicleState *v);
 	~FGCommunicator();
-	int Init();
+	int Init(int portOffset);
 	int Clean();
 
 	int Send();

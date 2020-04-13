@@ -65,18 +65,19 @@ int main(int argc, char **argv)
 	cerr << "Targed Bridge Freq: " << 1000000.0 / delay_us << ", send data every step: " << sendEveryStep << std::endl;
 
 	//parse parameters
-	if (argc < 2) {
-		cerr << "Use: bridge ControlCount ControlIndex0 ControlP0 ControlIndex1 ControlP1 ..." << endl;
+	if (argc < 3) {
+		cerr << "Use: bridge PX4ID ControlCount ControlIndex0 ControlP0 ControlIndex1 ControlP1 ..." << endl;
 	}
 
-	int controlsCount = atoi(argv[1]);
+    int px4id = atoi(argv[1]);
+	int controlsCount = atoi(argv[2]);
 
 	int *contolsMap = new int[controlsCount];
 	double *controlsP = new double[controlsCount];
 
 	for (int i = 0; i < controlsCount; i++) {
-		contolsMap[i] = atoi(argv[2 + 2 * i]);
-		controlsP[i] = atof(argv[2 + 2 * i + 1]);
+		contolsMap[i] = atoi(argv[3 + 2 * i]);
+		controlsP[i] = atof(argv[3 + 2 * i + 1]);
 	}
 
 	cout << controlsCount << endl;
@@ -89,12 +90,12 @@ int main(int argc, char **argv)
 	PX4Communicator px4(&vehicle);
 	FGCommunicator fg(&vehicle);
 
-	if (px4.Init() != 0) {
+	if (px4.Init(px4id) != 0) {
 		cerr << "Unable to Init PX4 Communication" << endl;
 		return -1;
 	}
 
-	if (fg.Init() != 0) {
+	if (fg.Init(px4id) != 0) {
 		cerr << "Unable to Init FG Communication" << endl;
 		return -1;
 	}

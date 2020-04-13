@@ -55,7 +55,7 @@ FGCommunicator::~FGCommunicator()
 	delete [] sendBuff;
 }
 
-int FGCommunicator::Init()
+int FGCommunicator::Init(int portOffset)
 {
 
 	fgSockOut = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -64,13 +64,13 @@ int FGCommunicator::Init()
 	memset((char *) &my_addr_out, 0, sizeof(my_addr_out));
 	my_addr_out.sin_family = AF_INET;
 	my_addr_out.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-	my_addr_out.sin_port = htons(4444);
+	my_addr_out.sin_port = htons(FGOutPortBase+portOffset);
 
 	fgSockIn = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	memset((char *) &fg_addr_in, 0, sizeof(my_addr_out));
 	fg_addr_in.sin_family = AF_INET;
 	fg_addr_in.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-	fg_addr_in.sin_port = htons(4445);
+	fg_addr_in.sin_port = htons(FGInPortBase+portOffset);
 
 	//bind socket to port
 	if (bind(fgSockOut, (struct sockaddr *) &my_addr_out, sizeof(my_addr_out)) == -1) {

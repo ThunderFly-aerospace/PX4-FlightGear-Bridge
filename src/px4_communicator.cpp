@@ -48,14 +48,14 @@ PX4Communicator::PX4Communicator(VehicleState * v)
 	this->vehicle=v;
 }
 
-int PX4Communicator::Init()
+int PX4Communicator::Init(int portOffset)
 {
 
     memset((char *) &simulator_mavlink_addr, 0, sizeof(px4_mavlink_addr));
     memset((char *) &px4_mavlink_addr, 0, sizeof(px4_mavlink_addr));
     simulator_mavlink_addr.sin_family = AF_INET;
     simulator_mavlink_addr.sin_addr.s_addr=htonl(INADDR_LOOPBACK);
-    simulator_mavlink_addr.sin_port = htons(4560);
+    simulator_mavlink_addr.sin_port = htons(portBase+portOffset);
 
      if ((listenMavlinkSock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
      {
