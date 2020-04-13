@@ -14,7 +14,7 @@ It connects to FG (over UDP generic protocol) and transform the data to PX4 over
 2) Install required aircraft models ([Rascal_110](http://wiki.flightgear.org/Rascal_110), [ThunderFly TF-G1](https://github.com/ThunderFly-aerospace/FlightGear-TF-G1))
 3) Set write permissions to the Protocol folder of FG (in ubuntu /usr/share/games/flightgear/Protocols)
 4) Open [QgroundControl](http://qgroundcontrol.com/)
-5) In PX4Firmware folder run: ```make px4_sitl_nosteplock flightgear_plane``` for plane or ```make px4_sitl_nosteplock flightgear_TF-G1``` for autogyro
+5) In PX4Firmware folder run: ```make px4_sitl_nosteplock flightgear_plane``` for plane or ```make px4_sitl_nosteplock flightgear_tf-g1``` for autogyro
 
 ### ADVANCED OPTIONS
 
