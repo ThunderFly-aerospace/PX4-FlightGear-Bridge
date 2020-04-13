@@ -173,8 +173,10 @@ int FGCommunicator::Recieve(bool blocking)
 				swap64(&outputPacket.measured_total_pressure_inhg);
 
 				//fprintf(stderr,"FG data recieved\n");
-
-				vehicle->setFGData(outputPacket);
+                if(outputPacket.elapsed_sec>0)
+    				vehicle->setFGData(outputPacket);
+                else
+                    return 0;
 
 				return 1;
 			}
