@@ -43,6 +43,7 @@ if fgmodelsdir is None:
 
 #get FGFS EXTRA PARAMS dir
 fgargsex=os.getenv("FG_ARGS_EX")
+print(fgargsex)
 if fgargsex is None:
     fgargsex=''
 
@@ -103,10 +104,9 @@ shutil.copy('px4bridge.xml',protocols+'/FGtoPX4.xml' )
 
 ############################ Run FG #############################################
 
-parameters = [fgbin,
+parameters = [
     "--aircraft=" + model,
     "--fg-aircraft=" + fgmodelsdir,
-    "--airport=PHNL",
     "--enable-terrasync",
     "--timeofday=noon",
     "--disable-sound",
@@ -140,8 +140,10 @@ parameters = [fgbin,
     "--disable-random-vegetation",
     "--disable-random-buildings",
     "--disable-rembrandt",
-    "--disable-horizon-effect & echo $! > /tmp/px4fgfspid"
+    "--disable-horizon-effect"
 ]
 
-print(" ".join(parameters))
-os.system(" ".join(parameters))
+commnad=fgbin+" "+" ".join(parameters)+" "+fgargsex+" & echo $! > /tmp/px4fgfspid"
+
+print(commnad)
+os.system(commnad)

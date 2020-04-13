@@ -13,9 +13,17 @@ It connects to FG (over UDP generic protocol) and transform the data to PX4 over
 1) Install FlightGear and . You should be able to run Flightgear by ```fgfs``` from command line.
 2) Install required aircraft models ([Rascal_110](http://wiki.flightgear.org/Rascal_110), [ThunderFly TF-G1](https://github.com/ThunderFly-aerospace/FlightGear-TF-G1))
 3) Set write permissions to the Protocol folder of FG (in ubuntu /usr/share/games/flightgear/Protocols)
-4) If flightgear data folder is different than ```/usr/share/games/flightgear/```, set that folder to ```FGDATA``` enviroment variable.
-5) Open [QgroundControl](http://qgroundcontrol.com/)
-6) In PX4Firmware folder run: ```make px4_sitl_nosteplock flightgear_plane``` for plane or ```make px4_sitl_nosteplock flightgear_TF-G1``` for autogyro
+4) Open [QgroundControl](http://qgroundcontrol.com/)
+5) In PX4Firmware folder run: ```make px4_sitl_nosteplock flightgear_plane``` for plane or ```make px4_sitl_nosteplock flightgear_TF-G1``` for autogyro
+
+### ADVANCED OPTIONS
+
+You can tune your FG settings by folowing ENV VARs:
+1) FG\_BINARY - absolut path to FG binnary to run. (It can be AppImage)
+2) FG\_MODELS\_DIR - absolut path to folder with your downloaded models
+3) FG\_ARGS\_EX - additional FG parameters 
+
+FlightGear Bridge and starting script now supports multiple instances of PX4. FG\_run script take second argument, which is PX4 ID (and compute port numbers according this numer) and bridge binary takes this ID as firs argument before output of get\_FGbridge\_params.py
 
 ### Limitations
 
