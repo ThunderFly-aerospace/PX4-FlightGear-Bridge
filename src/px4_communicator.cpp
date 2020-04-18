@@ -100,9 +100,34 @@ int PX4Communicator::Init(int portOffset)
 	return result;
 }
 
+void PX4Communicator::CheckClientReconect()
+{
+    struct pollfd fds[1] = {};
+    fds[0].fd = listenMavlinkSock;
+    fds[0].events = POLLIN;
+
+    int p=poll(&fds[0], 1, 1);
+    if(p<0)
+        fprintf(stderr,"Pool for new client error\n");
+
+    if(p==0)
+    {
+        //fprintf(stderr,"No new Client\n");
+    }
+    else
+    {
+        fprintf(stderr,"New Client Connected to Bridge\n");
+        close(px4MavlinkSock);
+        unsigned int px4_addr_len;
+        px4MavlinkSock = accept(listenMavlinkSock, (struct sockaddr *)&px4_mavlink_addr, &px4_addr_len);
+    }
+}
+
 
 int PX4Communicator::Clean()
 {
+    close(px4MavlinkSock);
+    close(listenMavlinkSock);
     return 0;
 }
 

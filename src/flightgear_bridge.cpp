@@ -112,6 +112,8 @@ int main(int argc, char **argv)
 			px4.Send();
 		}
 
+        px4.CheckClientReconect();
+
 		bool px4Recved = (px4.Recieve(false) == 1);
 
 		if (px4Recved) {
