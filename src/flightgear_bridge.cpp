@@ -45,6 +45,7 @@
 #include <cstring>
 
 #include <time.h>
+#include <signal.h>
 
 #include "px4_communicator.h"
 #include "fg_communicator.h"
@@ -53,10 +54,31 @@
 
 using namespace std;
 
+int stop=0;
+void termSignalHandler(int unused)
+{
+    stop=1;
+}
+
+void setup_unix_signals()
+{
+    struct sigaction term;
+    term.sa_handler = termSignalHandler;
+    sigemptyset(&term.sa_mask);
+    term.sa_flags |= SA_RESTART;
+
+    if (sigaction(SIGTERM, &term, nullptr))
+       std::cerr<<"Error when setting SIGTERM handler" <<std::endl;
+
+    /*if (sigaction(SIGINT, &term, nullptr))
+       std::cerr<<"Error when setting SIGINT handler" <<std::endl;*/
+
+}
+
 int main(int argc, char **argv)
 {
 	cerr << "I'm Mavlink to FlightGear Bridge" << endl;;
-
+    
 	int delay_us = 5000;
 	bool havePxData = false;
 	bool haveFGData = false;
@@ -100,7 +122,10 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
-	while (1) {
+    setup_unix_signals();
+    stop=0; //set from Signal handler
+	while (stop==0) 
+    {
 
 		bool fgRecved = (fg.Recieve(false) == 1);
 
