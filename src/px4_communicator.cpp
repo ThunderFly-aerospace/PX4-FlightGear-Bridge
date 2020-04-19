@@ -41,6 +41,7 @@
  */
 
 #include "px4_communicator.h"
+#include <iostream>
 
 
 PX4Communicator::PX4Communicator(VehicleState * v)
@@ -57,50 +58,80 @@ int PX4Communicator::Init(int portOffset)
     simulator_mavlink_addr.sin_addr.s_addr=htonl(INADDR_LOOPBACK);
     simulator_mavlink_addr.sin_port = htons(portBase+portOffset);
 
-      if ((listenMavlinkSock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-      {
-        fprintf(stderr,"Creating TCP socket failed: %s\n", strerror(errno));
-      }
+    if ((listenMavlinkSock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    {
+        std::cerr<<"PX4 Communicator: Creating TCP socket failed: " << strerror(errno) << std::endl;
+    }
 
-      int yes = 1;
-      int result = setsockopt(listenMavlinkSock, IPPROTO_TCP, TCP_NODELAY, &yes, sizeof(yes));
-      if (result != 0)
-      {
-        fprintf(stderr,"setsockopt failed: %s\n", strerror(errno));
-      }
+    //do not accumulate messages by waiting for ACK
+    int yes = 1;
+    int result = setsockopt(listenMavlinkSock, IPPROTO_TCP, TCP_NODELAY, &yes, sizeof(yes));
+    if (result != 0)
+    {
+        std::cerr<<"PX4 Communicator: setsockopt failed: " << strerror(errno) << std::endl;
+    }
 
-      struct linger nolinger;
-      nolinger.l_onoff = 1;
-      nolinger.l_linger = 0;
+    //try to close as fast as posible 
+    struct linger nolinger;
+    nolinger.l_onoff = 1;
+    nolinger.l_linger = 0;
+    result = setsockopt(listenMavlinkSock, SOL_SOCKET, SO_LINGER, &nolinger, sizeof(nolinger));
+    if (result != 0)
+    {
+        std::cerr<<"PX4 Communicator: setsockopt failed: " << strerror(errno) << std::endl;
+    }
 
-      result = setsockopt(listenMavlinkSock, SOL_SOCKET, SO_LINGER, &nolinger, sizeof(nolinger));
-      if (result != 0)
-      {
-        fprintf(stderr,"setsockopt failed: %s\n", strerror(errno));
-      }
+    // The socket reuse is necessary for reconnecting to the same address
+    // if the socket does not close but gets stuck in TIME_WAIT. This can happen
+    // if the server is suddenly closed, for example, if the robot is deleted in gazebo.
+    int socket_reuse = 1;
+    result = setsockopt(listenMavlinkSock, SOL_SOCKET, SO_REUSEADDR, &socket_reuse, sizeof(socket_reuse));
+    if (result != 0) 
+    {
+         std::cerr<<"PX4 Communicator: setsockopt failed: " << strerror(errno) << std::endl;
+    }
 
-      if (bind(listenMavlinkSock, (struct sockaddr *)&simulator_mavlink_addr, sizeof(simulator_mavlink_addr)) < 0)
-      {
-        fprintf(stderr,"bind failed:  %s\n", strerror(errno));
-      }
+    // Same as above but for a given port
+    result = setsockopt(listenMavlinkSock, SOL_SOCKET, SO_REUSEPORT, &socket_reuse, sizeof(socket_reuse));
+    if (result != 0) 
+    {
+        std::cerr<<"PX4 Communicator: setsockopt failed: " << strerror(errno) << std::endl;
+    }
 
-      errno = 0;
-	  result=listen(listenMavlinkSock, 0);
-      if (result < 0)
-      {
-        fprintf(stderr,"listen failed: %s\n", strerror(errno));
-      }
 
-      unsigned int px4_addr_len;
-      px4MavlinkSock = accept(listenMavlinkSock, (struct sockaddr *)&px4_mavlink_addr, &px4_addr_len);
+    if (bind(listenMavlinkSock, (struct sockaddr *)&simulator_mavlink_addr, sizeof(simulator_mavlink_addr)) < 0)
+    {
+        std::cerr<<"PX4 Communicator: bind failed:  " << strerror(errno) << std::endl;
+    }
 
-      sleep(5);
+    errno = 0;
+    result=listen(listenMavlinkSock, 5);
+    if (result < 0)
+    {
+        std::cerr<<"PX4 Communicator: listen failed: " << strerror(errno) << std::endl;
+    }
 
+    sleep(5);
+
+    unsigned int px4_addr_len=sizeof(px4_mavlink_addr);
+    while(true)
+    {
+        px4MavlinkSock = accept(listenMavlinkSock, (struct sockaddr *)&px4_mavlink_addr, &px4_addr_len);
+        if (px4MavlinkSock<0)
+        {
+            std::cerr<<"PX4 Communicator: accept failed: " << strerror(errno) << std::endl;
+        }
+        else
+        {
+            std::cerr<<"PX4 Communicator: PX4 Connected."<< std::endl;
+            break;
+        }
+    }
 
 	return result;
 }
 
-void PX4Communicator::CheckClientReconect()
+/*void PX4Communicator::CheckClientReconect()
 {
     struct pollfd fds[1] = {};
     fds[0].fd = listenMavlinkSock;
@@ -118,10 +149,10 @@ void PX4Communicator::CheckClientReconect()
     {
         fprintf(stderr,"New Client Connected to Bridge\n");
         close(px4MavlinkSock);
-        unsigned int px4_addr_len;
+        unsigned int px4_addr_len=sizeof(px4_mavlink_addr);;
         px4MavlinkSock = accept(listenMavlinkSock, (struct sockaddr *)&px4_mavlink_addr, &px4_addr_len);
     }
-}
+}*/
 
 
 int PX4Communicator::Clean()
@@ -141,6 +172,11 @@ int PX4Communicator::Send()
     mavlink_msg_hil_sensor_encode_chan(1, 200, MAVLINK_COMM_0, &msg, &vehicle->sensor_msg);
     packetlen = mavlink_msg_to_send_buffer(buffer, &msg);
     send(px4MavlinkSock, buffer, packetlen, 0);
+    if(send(px4MavlinkSock, buffer, packetlen, 0)!=packetlen)
+    {
+        std::cerr << "PX4 Communicator: Sent to PX4 failed: "<< strerror(errno) <<std::endl;
+        return -1;
+    }
 
 	/*mavlink_msg_hil_state_quaternion_encode_chan(1, 200, MAVLINK_COMM_0, &msg, &vehicle->hil_state_quat);
     packetlen = mavlink_msg_to_send_buffer(buffer, &msg);
@@ -148,7 +184,11 @@ int PX4Communicator::Send()
 
     mavlink_msg_hil_gps_encode_chan(1, 200, MAVLINK_COMM_0, &msg, &vehicle->hil_gps_msg);
     packetlen = mavlink_msg_to_send_buffer(buffer, &msg);
-    send(px4MavlinkSock, buffer, packetlen, 0);
+    if(send(px4MavlinkSock, buffer, packetlen, 0)!=packetlen)
+    {
+        std::cerr << "PX4 Communicator: Sent to PX4 failed: " << strerror(errno) <<std::endl;
+        return -1;
+    }
 
     return 0;
 }
@@ -165,11 +205,11 @@ int PX4Communicator::Recieve(bool blocking)
 
         int p=poll(&fds[0], 1, (blocking?-1:2));
         if(p<0)
-            fprintf(stderr,"Pool error\n");
+            std::cerr<<"PX4 Communicator: PX4 Pool error\n" << std::endl;
 
         if(p==0)
         {
-            //fprintf(stderr,"No PX data\n");
+            //std::cerr<<"PX4 Communicator:No PX data" <<std::endl;
         }
         else
         {
@@ -184,7 +224,6 @@ int PX4Communicator::Recieve(bool blocking)
                     {
                       if (mavlink_parse_char(MAVLINK_COMM_0, buffer[i], &msg, &status))
                       {
-                            //fprintf(stderr,"Parsed msg\n");
                             if(msg.msgid==MAVLINK_MSG_ID_HIL_ACTUATOR_CONTROLS)
                             {
                                     mavlink_hil_actuator_controls_t controls;
@@ -201,10 +240,3 @@ int PX4Communicator::Recieve(bool blocking)
     return 0;
 }
 
-int PX4Communicator::Test()
-{
-
-
-
-	return 0;
-}

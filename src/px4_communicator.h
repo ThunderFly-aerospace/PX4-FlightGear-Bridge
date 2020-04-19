@@ -82,7 +82,7 @@ public:
 	PX4Communicator(VehicleState *v);
 	int Init(int portOffset);
 	int Clean();
-    void CheckClientReconect();
+    //void CheckClientReconect();
 
 	int Send();
 	int Recieve(bool blocking);

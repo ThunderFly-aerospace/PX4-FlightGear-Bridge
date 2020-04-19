@@ -37,7 +37,7 @@
  * @author ThunderFly s.r.o., Vít Hanousek <info@thunderfly.cz>
  * @url https://github.com/ThunderFly-aerospace
  *
- * FlightGear communication socket.
+ * FlightGear socket communication.
  */
 
 
@@ -130,7 +130,8 @@ int FGCommunicator::Recieve(bool blocking)
 	int p = poll(&fds[0], 1, (blocking ? -1 : 2));
 
 	if (p < 0) {
-		fprintf(stderr, "Pool error\n");
+		fprintf(stderr, "FG: Pool error\n");
+        return 0;
 	}
 
 	if (p == 0) {

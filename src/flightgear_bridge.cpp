@@ -60,6 +60,11 @@ void termSignalHandler(int unused)
     stop=1;
 }
 
+void intSignalHandler(int unused)
+{
+   std::cerr<<"Bridge: Signal SIGINT recieve" <<std::endl; 
+}
+
 void setup_unix_signals()
 {
     struct sigaction term;
@@ -67,11 +72,22 @@ void setup_unix_signals()
     sigemptyset(&term.sa_mask);
     term.sa_flags |= SA_RESTART;
 
+    //shut down by sigTerm
     if (sigaction(SIGTERM, &term, nullptr))
        std::cerr<<"Error when setting SIGTERM handler" <<std::endl;
 
-    /*if (sigaction(SIGINT, &term, nullptr))
-       std::cerr<<"Error when setting SIGINT handler" <<std::endl;*/
+    //ignore pipe error -rather handle it by if in code
+    signal(SIGPIPE, SIG_IGN);
+
+
+    struct sigaction term2;
+    term2.sa_handler = intSignalHandler;
+    sigemptyset(&term2.sa_mask);
+    term2.sa_flags |= SA_RESTART;
+
+    if (sigaction(SIGINT, &term2, nullptr))
+       std::cerr<<"Error when setting SIGINT handler" <<std::endl;
+
 
 }
 
@@ -89,6 +105,7 @@ int main(int argc, char **argv)
 	//parse parameters
 	if (argc < 3) {
 		cerr << "Use: bridge PX4ID ControlCount ControlIndex0 ControlP0 ControlIndex1 ControlP1 ..." << endl;
+        return -1;
 	}
 
     int px4id = atoi(argv[1]);
@@ -136,8 +153,9 @@ int main(int argc, char **argv)
 		if (fgRecved || (haveFGData && sendEveryStep)) {
 			px4.Send();
 		}
-
-        px4.CheckClientReconect();
+        
+        //useless
+        //px4.CheckClientReconect();
 
 		bool px4Recved = (px4.Recieve(false) == 1);
 
