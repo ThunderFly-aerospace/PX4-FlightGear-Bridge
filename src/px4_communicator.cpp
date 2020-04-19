@@ -57,8 +57,8 @@ int PX4Communicator::Init(int portOffset)
     simulator_mavlink_addr.sin_addr.s_addr=htonl(INADDR_LOOPBACK);
     simulator_mavlink_addr.sin_port = htons(portBase+portOffset);
 
-     if ((listenMavlinkSock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-     {
+      if ((listenMavlinkSock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+      {
         fprintf(stderr,"Creating TCP socket failed: %s\n", strerror(errno));
       }
 
