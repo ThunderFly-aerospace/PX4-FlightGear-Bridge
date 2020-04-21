@@ -98,7 +98,7 @@ void VehicleState::setFGData(const fgOutputData &fgData)
 		std::cout << "Freq: " << freq << std::endl;
 	}
 
-	setSensorMsg(fgData);
+	setSensor(fgData);
 	setGPSMsg(fgData);
 }
 
@@ -126,36 +126,51 @@ void VehicleState::setGPSMsg(const fgOutputData &fgData)
 
 }
 
-void VehicleState::setSensorMsg(const fgOutputData &fgData)
+mavlink_hil_sensor_t VehicleState::getSensorMsg(int offset_us)
 {
-	sensor_msg.time_usec = fgData.elapsed_sec * 1e6;
+    mavlink_hil_sensor_t sensor_msg;
 
-	sensor_msg.xacc = ftToM(fgData.accelX_fps) + acc_nois * standard_normal_distribution_(random_generator_);
-	sensor_msg.yacc = ftToM(fgData.accelY_fps) + acc_nois * standard_normal_distribution_(random_generator_);
-	sensor_msg.zacc = ftToM(fgData.accelZ_fps) + acc_nois * standard_normal_distribution_(random_generator_);
+	sensor_msg.time_usec =elapsed_sec * 1e6+offset_us;
 
-	Vector3d gyro = getGyro(fgData);
+	sensor_msg.xacc = acc[0] + acc_nois * standard_normal_distribution_(random_generator_);
+	sensor_msg.yacc = acc[1] + acc_nois * standard_normal_distribution_(random_generator_);
+	sensor_msg.zacc = acc[2] + acc_nois * standard_normal_distribution_(random_generator_);
+
 	sensor_msg.xgyro = gyro[0] + gyro_nois * standard_normal_distribution_(random_generator_);
 	sensor_msg.ygyro = gyro[1] + gyro_nois * standard_normal_distribution_(random_generator_);
 	sensor_msg.zgyro = gyro[2] + gyro_nois * standard_normal_distribution_(random_generator_);
 
-	Vector3d mag_l = getMagneticField(fgData);
 	sensor_msg.xmag = mag_l[0] + mag_nois * standard_normal_distribution_(random_generator_);
 	sensor_msg.ymag = mag_l[1] + mag_nois * standard_normal_distribution_(random_generator_);
 	sensor_msg.zmag = mag_l[2] + mag_nois * standard_normal_distribution_(random_generator_);
 
-	sensor_msg.temperature = fgData.temperature_degc + temp_nois * standard_normal_distribution_(random_generator_);
-	sensor_msg.abs_pressure = fgData.pressure_inhg * 3386.39 / 100.0 + abs_pressure_nois * standard_normal_distribution_
-				  (random_generator_);
-	sensor_msg.pressure_alt = ftToM(fgData.pressure_alt_ft) + baro_alt_nois * standard_normal_distribution_
-				  (random_generator_);
-
-	sensor_msg.diff_pressure = (fgData.measured_total_pressure_inhg - fgData.pressure_inhg) * 3386.39 / 100.0 +
-				   diff_pressure_nois * standard_normal_distribution_(random_generator_) ;
+	sensor_msg.temperature = temperature + temp_nois * standard_normal_distribution_(random_generator_);
+	sensor_msg.abs_pressure = abs_pressure + abs_pressure_nois * standard_normal_distribution_(random_generator_);
+	sensor_msg.pressure_alt = pressure_alt + baro_alt_nois * standard_normal_distribution_(random_generator_);
+	sensor_msg.diff_pressure = diff_pressure + diff_pressure_nois * standard_normal_distribution_(random_generator_) ;
 	sensor_msg.fields_updated = (uint16_t)0x1FFF;
 
+    return sensor_msg;
+}
+
+void VehicleState::setSensor(const fgOutputData &fgData)
+{
+	elapsed_sec = fgData.elapsed_sec;
+
+	acc[0] = ftToM(fgData.accelX_fps);
+	acc[1] = ftToM(fgData.accelY_fps);
+	acc[2] = ftToM(fgData.accelZ_fps);
+
+    gyro = getGyro(fgData);
+    mag_l = getMagneticField(fgData);
+
+	temperature = fgData.temperature_degc;
+	abs_pressure = fgData.pressure_inhg * 3386.39 / 100.0;
+	pressure_alt = ftToM(fgData.pressure_alt_ft);
+	diff_pressure = (fgData.measured_total_pressure_inhg - fgData.pressure_inhg) * 3386.39 / 100.0;
 
 }
+
 
 Vector3d VehicleState::getGyro(const fgOutputData &fgData)
 {

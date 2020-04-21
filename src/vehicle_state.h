@@ -93,7 +93,6 @@ class VehicleState
 
 public:
 
-	mavlink_hil_sensor_t sensor_msg;
 	mavlink_hil_gps_t hil_gps_msg;
 	double *FGControls;
 	int controlsCount;
@@ -105,15 +104,16 @@ public:
 	~VehicleState();
 	void setFGData(const fgOutputData &fgData);
 	void setPXControls(const mavlink_hil_actuator_controls_t &controls);
+    mavlink_hil_sensor_t getSensorMsg(int offset_us);
 
 private:
 	double ftToM(double ft);
 	double degToRad(double deg);
 	double ftpssTomG(double fpss);
 
-	void setSensorMsg(const fgOutputData &fgData);
+	void setSensor(const fgOutputData &fgData);
 	void setGPSMsg(const fgOutputData &fgData);
-	void setStateQuatMsg(const fgOutputData &fgData);
+	//void setStateQuatMsg(const fgOutputData &fgData);
 
 	Vector3d getBarometrTempAltPres(const fgOutputData &fgData);
 	Vector3d getMagneticField(const fgOutputData &fgData);
@@ -132,6 +132,16 @@ private:
 	double temp_nois;
 	double abs_pressure_nois;
 	double diff_pressure_nois;
+
+    //sensor state
+    double elapsed_sec;
+    Vector3d acc;
+    Vector3d gyro;
+    Vector3d mag_l;
+    double temperature;
+    double abs_pressure;
+    double pressure_alt;
+    double diff_pressure;
 
 };
 

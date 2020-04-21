@@ -84,7 +84,7 @@ public:
 	int Clean();
     //void CheckClientReconect();
 
-	int Send();
+	int Send(int offset_us);
 	int Recieve(bool blocking);
 
 

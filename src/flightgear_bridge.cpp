@@ -141,6 +141,7 @@ int main(int argc, char **argv)
 
     setup_unix_signals();
     stop=0; //set from Signal handler
+    int FgNonRecieveIters=0;
 	while (stop==0) 
     {
 
@@ -148,10 +149,15 @@ int main(int argc, char **argv)
 
 		if (fgRecved) {
 			haveFGData = true;
+            FgNonRecieveIters=0;
 		}
+        else
+        {
+            FgNonRecieveIters++;
+        }
 
 		if (fgRecved || (haveFGData && sendEveryStep)) {
-			px4.Send();
+			px4.Send(FgNonRecieveIters*delay_us);
 		}
         
         //useless

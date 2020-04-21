@@ -162,14 +162,16 @@ int PX4Communicator::Clean()
     return 0;
 }
 
-int PX4Communicator::Send()
+int PX4Communicator::Send(int offset_us)
 {
 
     mavlink_message_t msg;
     uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
     int packetlen;
 
-    mavlink_msg_hil_sensor_encode_chan(1, 200, MAVLINK_COMM_0, &msg, &vehicle->sensor_msg);
+    mavlink_hil_sensor_t sensor_msg =vehicle->getSensorMsg(offset_us);
+
+    mavlink_msg_hil_sensor_encode_chan(1, 200, MAVLINK_COMM_0, &msg, &sensor_msg);
     packetlen = mavlink_msg_to_send_buffer(buffer, &msg);
     send(px4MavlinkSock, buffer, packetlen, 0);
     if(send(px4MavlinkSock, buffer, packetlen, 0)!=packetlen)
@@ -178,11 +180,10 @@ int PX4Communicator::Send()
         return -1;
     }
 
-	/*mavlink_msg_hil_state_quaternion_encode_chan(1, 200, MAVLINK_COMM_0, &msg, &vehicle->hil_state_quat);
-    packetlen = mavlink_msg_to_send_buffer(buffer, &msg);
-    send(px4MavlinkSock, buffer, packetlen, 0);*/
+    mavlink_hil_gps_t hil_gps_msg=vehicle->hil_gps_msg;
+    hil_gps_msg.time_usec+=offset_us;
 
-    mavlink_msg_hil_gps_encode_chan(1, 200, MAVLINK_COMM_0, &msg, &vehicle->hil_gps_msg);
+    mavlink_msg_hil_gps_encode_chan(1, 200, MAVLINK_COMM_0, &msg, &hil_gps_msg);
     packetlen = mavlink_msg_to_send_buffer(buffer, &msg);
     if(send(px4MavlinkSock, buffer, packetlen, 0)!=packetlen)
     {
