@@ -27,8 +27,7 @@ FlightGear Bridge and starting script now supports multiple instances of PX4. FG
 
 ### Limitations
 
-The PX4 is connected to FlightGear thought "[generic protocol](http://wiki.flightgear.org/Generic_protocol)", which is served synchronously to the simulator graphics engine frame rate. So the PX4 gets the sensor data in frequency, depending on graphics resources and the current scene.
-In the future, the bridge can upsample the data by generating noised samples from the last known value it is a terrible way.
+The PX4 is connected to FlightGear thought "[generic protocol](http://wiki.flightgear.org/Generic_protocol)", which is served synchronously to the simulator graphics engine frame rate. So the PX4 gets the sensor data in frequency, depending on graphics resources and the current scene. The source-code implements artificial upsampling of sensor data to ~100Hz in the order to avoid stale sensors detection. A random noise is added to the sensor data. 
 
 The possible better approach is to interface the flightgear trought a [HLA](http://wiki.flightgear.org/High-Level_Architecture).
 
