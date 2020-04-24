@@ -1,5 +1,5 @@
 {
-    "FgModel":"Rascal110-JSBSim",
+    "FgModel":"Rascal110-YASim",
     "Url":"http://mirrors.ibiblio.org/flightgear/ftp/Aircraft/Rascal.zip",
     "Controls": [
                 ["5","/controls/flight/aileron","-1"],
