@@ -143,7 +143,10 @@ parameters = [
     "--disable-horizon-effect"
 ]
 
-commnad=fgbin+" "+" ".join(parameters)+" "+fgargsex+" 2> /dev/null  & echo $! > /tmp/px4fgfspid_"+str(px4id)
+#without FG output
+commnad=fgbin+" "+fgargsex+" "+" ".join(parameters)+" 2> /dev/null  & echo $! > /tmp/px4fgfspid_"+str(px4id)
+#with FG output
+#commnad=fgbin+" "+fgargsex+" "+" ".join(parameters)+" & echo $! > /tmp/px4fgfspid_"+str(px4id)
 
 print(commnad)
 os.system(commnad)

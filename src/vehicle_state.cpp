@@ -95,7 +95,7 @@ void VehicleState::setFGData(const fgOutputData &fgData)
 	lastTime = fgData.elapsed_sec;
 
 	if (freq < 20) {
-		std::cout << "Freq: " << freq << std::endl;
+		std::cout << "FGBridge: Low FlightGear Update Freq: " << freq << std::endl;
 	}
 
 	setSensor(fgData);
