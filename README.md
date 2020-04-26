@@ -10,15 +10,15 @@ It connects to FG (over UDP generic protocol) and transforms the data to TCP MAV
 
 ### How to run the development version:
 
-####Install:
+#### Install:
 1) Install FlightGear.
 2) Install Models. Run ```fgfs --launcher``` on tab Add-ons add new a hangar http://location_of_oour_hangar. Install Rascal model from this hangar.
 3) Set write permissions to the `Protocols` folder of the FlightGear Data. On Ubuntu run ```sudo chmod a+w /usr/share/games/flightgear/Protocols ```
-####Run:
+#### Run:
 1) Open [QgroundControl](http://qgroundcontrol.com/)
 2) In PX4Firmware folder run: ```make px4_sitl_nolockstep flightgear_rascal``` for plane.
 3) Wait until FlightGear fully loads.
-####Known issue:
+#### Known issue:
 1) If you have FPS lower than 20 it will not work correctly. Check your FPS. In FlightGear bridge look set View->View Options->Show frame rate
 2) Multiple models in hangar (with eletric engine) need up-to-date FlightGear from nightly budils.
 3) If you set-up mission take off to oposite direction than aircraft current heading, than the aircraft will fly directly forever.
