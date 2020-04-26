@@ -12,17 +12,19 @@ It connects to FG (over UDP generic protocol) and transforms the data to TCP MAV
 
 #### Install:
 1) Install FlightGear.
-2) Install Models. Run ```fgfs --launcher``` on tab Add-ons add new a hangar http://location_of_oour_hangar. Install Rascal model from this hangar.
-3) Set write permissions to the `Protocols` folder of the FlightGear Data. On Ubuntu run ```sudo chmod a+w /usr/share/games/flightgear/Protocols ```
+2) Install Models. Run ```fgfs --launcher``` on tab Add-ons add new a hangar http://location_of_thunderflyhangar. The install aircraft models from this hangar.
+3) Set write permissions to the `Protocols` folder in the FlightGear instalation directory. On Ubuntu run ```sudo chmod a+w /usr/share/games/flightgear/Protocols ```
+
 #### Run:
 1) Open [QgroundControl](http://qgroundcontrol.com/)
 2) In PX4Firmware folder run: ```make px4_sitl_nolockstep flightgear_rascal``` for plane.
 3) Wait until FlightGear fully loads.
-#### Known issue:
-1) If you have FPS lower than 20 it will not work correctly. Check your FPS. In FlightGear bridge look set View->View Options->Show frame rate
-2) Multiple models in hangar (with eletric engine) need up-to-date FlightGear from nightly budils.
-3) If you set-up mission take off to oposite direction than aircraft current heading, than the aircraft will fly directly forever.
-4) Internally starting scripts run ```fgfs``` with set of parameters to reduce graphic and connect FG to bridge. But before that, the starting script search for FG-Data folder by running ```fgfs --version```. If your output of this command does not contains FG_ROOT line, the script will not work. Check how is your FG run in system, by ```which fgfs```.
+
+#### Known issues:
+1) If you have FPS lower than 20 the bridge will not work correctly. Check your FPS. In FlightGear display frame rate by enabling it in View->View Options->Show frame rate.
+2) Multiple models in the hangar have an electric engine that needs up-to-date FlightGear from [nightly builds PPA repository](https://launchpad.net/~saiarcot895/+archive/ubuntu/flightgear-edge).
+3) In the case, you have set-up mission take off in the opposite direction than aircraft current heading, then the aircraft [will fly directly away forever](https://github.com/ThunderFly-aerospace/PX4-FlightGear-Bridge/issues/10).
+4) Internal starting scripts run ```fgfs``` with a set of parameters to reduce graphics and connect FG to bridge. But before that, the starting script searches for the FG-Data folder by running ```fgfs --version```. If your output of this command does not contain the FG_ROOT line, the script will not work. Check how is your FG binaries in the system, by ```which fgfs```.
 
 ### Advanced Options
 
