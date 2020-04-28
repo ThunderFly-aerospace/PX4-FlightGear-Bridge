@@ -1,0 +1,9 @@
+[submodule "models/FlightGear-Rascal"]
+	path = models/FlightGear-Rascal
+	url = https://github.com/ThunderFly-aerospace/FlightGear-Rascal.git
+[submodule "models/FlightGear-TF-G1"]
+	path = models/TF-G1
+	url = https://github.com/ThunderFly-aerospace/FlightGear-TF-G1.git
+[submodule "models/FlightGear-TF-R1"]
+	path = models/TF-R1
+	url = https://github.com/ThunderFly-aerospace/FlightGear-TF-R1.git

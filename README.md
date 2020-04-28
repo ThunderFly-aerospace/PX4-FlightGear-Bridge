@@ -11,18 +11,19 @@ It connects to FG (over UDP generic protocol) and transforms the data to TCP MAV
 ### How to run the development version:
 
 #### Install:
-1) Install FlightGear.
-2) Install Models. Run ```fgfs --launcher``` on tab Add-ons add new a hangar http://location_of_oour_hangar. Install Rascal model from this hangar.
-3) Set write permissions to the `Protocols` folder of the FlightGear Data. On Ubuntu run ```sudo chmod a+w /usr/share/games/flightgear/Protocols ```
+1) Install FlightGear. In Ubuntu You can use install last stable FG from PAA repository by folowing commands: ```sudo add-apt-repository -y -u ppa:saiarcot895/flightgear``` and ```sudo DEBIAN_FRONTEND=noninteractive apt-get -y --quiet install flightgear```
+2) Set write permissions to the `Protocols` folder of the FlightGear Data. On Ubuntu run ```sudo chmod a+w /usr/share/games/flightgear/Protocols```
 #### Run:
 1) Open [QgroundControl](http://qgroundcontrol.com/)
 2) In PX4Firmware folder run: ```make px4_sitl_nolockstep flightgear_rascal``` for plane.
 3) Wait until FlightGear fully loads.
 #### Known issue:
 1) If you have FPS lower than 20 it will not work correctly. Check your FPS. In FlightGear bridge look set View->View Options->Show frame rate
-2) Multiple models in hangar (with eletric engine) need up-to-date FlightGear from nightly budils.
-3) If you set-up mission take off to oposite direction than aircraft current heading, than the aircraft will fly directly forever.
-4) Internally starting scripts run ```fgfs``` with set of parameters to reduce graphic and connect FG to bridge. But before that, the starting script search for FG-Data folder by running ```fgfs --version```. If your output of this command does not contains FG_ROOT line, the script will not work. Check how is your FG run in system, by ```which fgfs```.
+2) You can use wild set of FG version - we tested instalation with FG 2019.1.1 and Nextgen FG (nightly builds). But in past I shorly tested basic functionality on Debian 9, FG 2016.1.1 from distribution repository, with some Racal (JSBSim) model.
+3) Default models used by bridge is placed in bridge models subdirectory (as git submodules). Multiple models in this directory need up-to-date FlightGear from nightly budils (e.g.: these with eletric engine).
+4) If you set-up mission take off to oposite direction than aircraft current heading, than the aircraft will fly directly forever. (maybe in other scenarios too). Nobody knows why.
+5) Internally starting scripts run ```fgfs``` with set of parameters to reduce graphic, connect FG to bridge and use model from subdirectory. But before that, the starting script search for FG-Data folder by running ```fgfs --version```. If your output of this command does not contains FG_ROOT line, the startup script and whole bridge will not work. Check how your system runs FG by commnad ```which fgfs```. Advanced Options of bridge may help.
+6) If you want more friendly plane, you can switch Rascal model from YASim physical engine to JSBSim physical engine by editing file ```models/rascal.json```. Substitue ```Rascal110-YASim``` by ```Rascal110-JSBSim```.
 
 ### Advanced Options
 

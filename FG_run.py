@@ -39,7 +39,7 @@ if not fgroot:
 #get FGFS MODEL dir
 fgmodelsdir=os.getenv("FG_MODELS_DIR")
 if fgmodelsdir is None:
-    fgmodelsdir=fgroot+'/Aircraft'
+    fgmodelsdir='./models'
 
 #get FGFS EXTRA PARAMS dir
 fgargsex=os.getenv("FG_ARGS_EX")
@@ -51,12 +51,6 @@ protocols=fgroot+'/Protocol'
 if not os.access(protocols, os.W_OK):
     print('Cannot Write into direcotry: '+ protocols)
     exit(-1)
-
-#models=fgdata+'/Aircraft'
-#if not os.access(models, os.W_OK):
-#    print('Cannot Write into direcotry: '+ protocols)
-#    exit(-1)
-
 
 ############################ Parse Config ######################################
 
@@ -70,10 +64,6 @@ print(model)
 print(url)
 for c in controls:
     print(c[0]+' '+c[1]+' '+c[2])
-
-
-############################ Download Model #####################################
-#if not exists -- not implemend yet
 
 ############################ Create FG Input Protocol ###########################
 propertyList=ET.Element('PropertyList')
@@ -127,7 +117,7 @@ parameters = [
     "--disable-clouds",
     "--disable-clouds3d",
     "--fog-fastest",
-    "--visibility=5000",
+    "--visibility=2000",
     "--disable-distance-attenuation",
     "--disable-real-weather-fetch",
     "--prop:/sim/rendering/particles=0",
@@ -143,10 +133,8 @@ parameters = [
     "--disable-horizon-effect"
 ]
 
-#without FG output
-commnad=fgbin+" "+fgargsex+" "+" ".join(parameters)+" 2> /dev/null  & echo $! > /tmp/px4fgfspid_"+str(px4id)
 #with FG output
-#commnad=fgbin+" "+fgargsex+" "+" ".join(parameters)+" & echo $! > /tmp/px4fgfspid_"+str(px4id)
+commnad=fgbin+" "+fgargsex+" "+" ".join(parameters)+" & echo $! > /tmp/px4fgfspid_"+str(px4id)
 
 print(commnad)
 os.system(commnad)
