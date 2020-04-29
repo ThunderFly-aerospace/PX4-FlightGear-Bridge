@@ -1,0 +1,33 @@
+name: Build Tests
+
+on:
+  push:
+    branches:
+    - 'master'
+  pull_request:
+    branches:
+    - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ubuntu_release: [
+          bionic
+          ]
+    container: px4io/px4-dev-simulation-${{ matrix.ubuntu_release }}:2020-04-01
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        token: ${{ secrets.ACCESS_TOKEN }}
+    - name: build
+      run:
+        apt update && apt install -y software-properties-common;
+        add-apt-repository ppa:saiarcot895/flightgear;
+        apt update;
+        apt install -y flightgear;
+        mkdir build;
+        cd build;
+        cmake ..;
+        make
