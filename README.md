@@ -1,5 +1,7 @@
 # FlightGear Bridge
 
+![Build Tests](https://github.com/PX4/PX4-FlightGear-Bridge/workflows/Build%20Tests/badge.svg)
+
 The FlightGear alternative to the current PX4's mainstream simulator Gazebo.
 
 ![FlightGear SITL connected with PX4 and QGroundControl](art/screenshot.png)
