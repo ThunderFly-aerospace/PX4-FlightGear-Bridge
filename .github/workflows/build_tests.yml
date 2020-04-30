@@ -23,10 +23,6 @@ jobs:
         token: ${{ secrets.ACCESS_TOKEN }}
     - name: build
       run:
-        apt update && apt install -y software-properties-common;
-        add-apt-repository ppa:saiarcot895/flightgear;
-        apt update;
-        apt install -y flightgear;
         mkdir build;
         cd build;
         cmake ..;
