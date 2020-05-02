@@ -23,11 +23,10 @@ It connects to FG (over UDP generic protocol) and transforms the data to TCP MAV
 
 #### Known issues:
 1) If you have FPS lower than 20 the bridge will not work correctly. Check your FPS. In FlightGear display frame rate by enabling it in View->View Options->Show frame rate.
-2) You can probalby use wild set of FG versions - we tested instalation with FG 2019.1.1 and Nextgen FG (nightly builds). But in past I developed basic functionality on Debian 9, FG 2016.1.1 from distribution repository, with some Racal (JSBSim) model download as zip from somewhere.
-3) Multiple models packaged with bridge have an electric engine that needs up-to-date FlightGear from [nightly builds PPA repository](https://launchpad.net/~saiarcot895/+archive/ubuntu/flightgear-edge).
-4) In the case, you have set-up mission take off in the opposite direction than aircraft current heading, then the aircraft [will fly directly away forever](https://github.com/ThunderFly-aerospace/PX4-FlightGear-Bridge/issues/10). May in other situations too, no one knows why.
-5) Internal starting scripts run ```fgfs``` with a set of parameters to reduce graphics, connect FG to bridge and setup models directory. But before that, the starting script searches for the FG-Data folder by running ```fgfs --version```. If your output of this command does not contain the FG_ROOT line, the script will not work. Check how is your FG binaries in the system, by ```which fgfs```. Then Advanced Options of Bridge can help you.
-6) If you want more friendly plane (in my opinion), you can switch Rascal model from YASim physical engine to JSBSim physical engine by editing file ```models/rascal.json```. Substitue ```Rascal110-YASim``` by ```Rascal110-JSBSim```.
+2) You can probably use a wild set of FG versions - we tested installation with FG 2019.1.1 and the "next" (source-code branch) of FG (nightly builds). But in the past, we achieved basic functionality on Debian 9, FG 2016.1.1 from distribution repository, with some Racal (JSBSim) model download as a zip from the FGaddon repository.
+3) Multiple models packaged with the bridge have an electric engine that needs up-to-date patched FlightGear from [nightly builds PPA repository](https://launchpad.net/~saiarcot895/+archive/ubuntu/flightgear-edge).
+5) Internal starting scripts run ```fgfs``` has a set of parameters to reduce graphic load. But before that setup, the starting script searches for the FG-Data folder by running ```fgfs --version```. If your output of this command does not contain the FG_ROOT line, the script will not work. Check how is your FG binaries in the system, by ```which fgfs```. Then the Advanced Options section of this readme can help you.
+6) If you want another plane model, you can switch the Rascal model to another editing file ```models/rascal.json```.  For example substitute ```Rascal110-YASim``` by ```Rascal110-JSBSim```, or another aircraft name.
 
 ### Advanced Options
 
@@ -39,11 +38,11 @@ You can tune your FG installation/settings by the following environment variable
 
 FlightGear Bridge and starting script now support multiple instances of PX4. FG\_run script takes the second argument, which is PX4 ID (and automatically adjust the port numbers according to given number) and bridge binary takes this ID as the first argument before the output of get\_FGbridge\_params.py
 
-If you want to test other aircraft with PX4, you need:
-1) Add the downloaded aircraft to ```models``` subdirectory, or to other MODEL PATH searched by FG
+If you want to test another aircraft with PX4, you need:
+1) Add the FlightGear aircraft to ```models``` subdirectory, or to other MODEL PATH searched by FG
 2) In ```models``` subdirectory create ```.json``` file. 
 3) Add model into PX4 make system in file ```platforms/posix/cmake/sitl_target.cmake``` with same name as json file in previous step.
-4) You probably will need PX4 startup script for your vehicle. (vehicle name is same name as name of .json file)
+4) You probably will need a PX4 startup script for your vehicle. (vehicle name is the same name as the name of .json file)
 
 ### Limitations
 
