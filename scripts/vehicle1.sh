@@ -9,8 +9,9 @@ export FG_BINARY=fgfs
 export FG_MODELS_DIR=${MODEL_PATH}
 export FG_ARGS_EX="--allow-nasal-read=${MODEL_PATH} \
                    --callsign=TF-A1 \
-                   --offset-distance=0.005 \
-                   --offset-azimuth=310 \
+                   --airport=LKSO \
+                   --offset-distance=0.003 \
+                   --offset-azimuth=90 \
                    --ignore-autosave \
                    --disable-hold-short \
                    --prop:input/joysticks/js=0 \
