@@ -22,4 +22,4 @@ export PX4_ID=1
 
 
 cd ${FIRMWARE_DIR}
-make px4_sitl_nolockstep flightgear_rascal___multi
+make px4_sitl_nolockstep flightgear_rascal___multi  # The make target flightgear_rascal___multi is currently available only in flightgear-multi branch of https://github.com/ThunderFly-aerospace/PX4Firmware fork
