@@ -15,6 +15,7 @@ export FG_ARGS_EX="--allow-nasal-read=${MODEL_PATH} \
                    --ignore-autosave \
                    --disable-hold-short \
                    --prop:input/joysticks/js=0 \
+                   --prop:/sim/rendering/static-lod/aimp-range-mode-distance=true \
                    --disable-mouse-pointer \
                    --multiplay=out,10,127.0.0.1,5001 \
                    --multiplay=in,10,127.0.0.1,5000"
