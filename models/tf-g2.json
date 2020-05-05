@@ -1,0 +1,10 @@
+{
+    "FgModel":"TF-G2",
+    "Url":"https://github.com/ThunderFly-aerospace/FlightGear-TF-G2/archive/master.zip",
+    "Controls": [
+                ["2","/controls/flight/aileron","-1"],
+                ["3","/controls/flight/elevator","-1"],
+                ["0","/controls/flight/rudder","1"],
+                ["1","/controls/engines/engine/throttle","1"]
+                ]
+}
