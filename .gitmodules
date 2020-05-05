@@ -7,6 +7,6 @@
 [submodule "models/FlightGear-TF-R1"]
 	path = models/TF-R1
 	url = https://github.com/ThunderFly-aerospace/FlightGear-TF-R1.git
-[submodule "modules/FlightGear-TF-G2"]
-	path = modules/FlightGear-TF-G2
+[submodule "models/FlightGear-TF-G2"]
+	path = models/TF-G2
 	url = https://github.com/ThunderFly-aerospace/FlightGear-TF-G2.git
