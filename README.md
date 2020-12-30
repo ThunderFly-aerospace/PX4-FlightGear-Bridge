@@ -13,7 +13,7 @@ It connects to FG (over UDP generic protocol) and transforms the data to TCP MAV
 ### How to run the development version:
 
 #### Install:
-1) Install FlightGear. In Ubuntu You can use install last stable FG from PAA repository by folowing commands: ```sudo add-apt-repository -y -u ppa:saiarcot895/flightgear``` and ```sudo DEBIAN_FRONTEND=noninteractive apt-get -y --quiet install flightgear```
+1) Install FlightGear. In Ubuntu You can use install last stable FG from the [PPA repository](https://launchpad.net/~saiarcot895/+archive/ubuntu/flightgear) by following commands: ```sudo add-apt-repository -y -u ppa:saiarcot895/flightgear``` and ```sudo DEBIAN_FRONTEND=noninteractive apt-get -y --quiet install flightgear```
 3) Set write permissions to the `Protocols` folder in the FlightGear instalation directory. On Ubuntu run ```sudo chmod a+w /usr/share/games/flightgear/Protocol ```
 
 #### Run:
@@ -23,7 +23,7 @@ It connects to FG (over UDP generic protocol) and transforms the data to TCP MAV
 
 #### Known issues:
 1) If you have FPS lower than 20 the bridge will not work correctly. Check your FPS. In FlightGear display frame rate by enabling it in View->View Options->Show frame rate.
-2) You can probably use a wild set of FG versions - we tested installation with FG 2019.1.1 and the "next" (source-code branch) of FG (nightly builds). But in the past, we achieved basic functionality on Debian 9, FG 2016.1.1 from distribution repository, with some Racal (JSBSim) model download as a zip from the FGaddon repository.
+2) You can probably use a wild set of FG versions - we tested installation with FG 2019.1.1 and the "next" (source-code branch) of FG (nightly builds). But in the past, we achieved basic functionality on Debian 9, FG 2016.1.1 from the distribution repository, with some Racal (JSBSim) model download as a zip from the FGaddon repository.
 3) Multiple models packaged with the bridge have an electric engine that needs up-to-date patched FlightGear from [nightly builds PPA repository](https://launchpad.net/~saiarcot895/+archive/ubuntu/flightgear-edge).
 5) Internal starting scripts run ```fgfs``` has a set of parameters to reduce graphic load. But before that setup, the starting script searches for the FG-Data folder by running ```fgfs --version```. If your output of this command does not contain the FG_ROOT line, the script will not work. Check how is your FG binaries in the system, by ```which fgfs```. Then the Advanced Options section of this readme can help you.
 6) If you want another plane model, you can switch the Rascal model to another editing file ```models/rascal.json```.  For example substitute ```Rascal110-YASim``` by ```Rascal110-JSBSim```, or another aircraft name.
