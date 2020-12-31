@@ -15,7 +15,7 @@ It connects to FG (over UDP generic protocol) and transforms the data to TCP MAV
 #### Install:
 1) Install FlightGear. In Ubuntu You can use install last stable FG from the [PPA repository](https://launchpad.net/~saiarcot895/+archive/ubuntu/flightgear) by following commands: ```sudo add-apt-repository -y -u ppa:saiarcot895/flightgear``` and ```sudo DEBIAN_FRONTEND=noninteractive apt-get -y --quiet install flightgear```
 3) Set write permissions to the `Protocols` folder in the FlightGear instalation directory. On Ubuntu run ```sudo chmod a+w /usr/share/games/flightgear/Protocol ```
-4) Intall PX4-Flightgear-bridge ignition-math4 dependency ```apt-get install -y libignition-math4-dev``` [issue #15](https://github.com/ThunderFly-aerospace/PX4-FlightGear-Bridge/issues/15)
+4) Intall PX4-Flightgear-bridge ignition-math4 dependency ```sudo apt-get install -y libignition-math4-dev``` [issue #15](https://github.com/ThunderFly-aerospace/PX4-FlightGear-Bridge/issues/15)
 
 #### Run:
 1) Open [QgroundControl](http://qgroundcontrol.com/)
