@@ -46,10 +46,9 @@
 #include <random>
 
 #include <mavlink/v2.0/common/mavlink.h>
-#include <ignition/math/Vector3.hh>
-#include <ignition/math/Quaternion.hh>
+#include <Eigen/Geometry> 
 
-using namespace ignition::math;
+using namespace Eigen;
 
 struct fgOutputData {
 
@@ -90,6 +89,8 @@ struct fgOutputData {
 
 class VehicleState
 {
+
+//typedef Vector3d Vector3<double>
 
 public:
 
