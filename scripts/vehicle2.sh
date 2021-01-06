@@ -15,6 +15,7 @@ export FG_ARGS_EX="--allow-nasal-read=${MODEL_PATH} \
                    --ignore-autosave \
                    --disable-hold-short \
                    --prop:input/joysticks/js=0 \
+                   --prop:/sim/rendering/static-lod/aimp-range-mode-distance=true \
                    --disable-mouse-pointer \
                    --multiplay=out,10,127.0.0.1,5001 \
                    --multiplay=in,10,127.0.0.1,5000"
@@ -22,4 +23,4 @@ export PX4_ID=1
 
 
 cd ${FIRMWARE_DIR}
-make px4_sitl_nolockstep flightgear_rascal___multi
+make px4_sitl_nolockstep flightgear_rascal___multi  # The make target flightgear_rascal___multi is currently available only in flightgear-multi branch of https://github.com/ThunderFly-aerospace/PX4Firmware fork

@@ -175,18 +175,18 @@ void VehicleState::setSensor(const fgOutputData &fgData)
 Vector3d VehicleState::getGyro(const fgOutputData &fgData)
 {
 
-	Quaterniond roll(Vector3d(1, 0, 0), degToRad(fgData.roll_deg));
-	Quaterniond pitch(Vector3d(0, 1, 0), degToRad(fgData.pitch_deg));
-	Quaterniond heading(Vector3d(0, 0, 1), degToRad(fgData.heading_deg));
+	Quaterniond roll(AngleAxisd(degToRad(fgData.roll_deg),Vector3d(1, 0, 0)));
+	Quaterniond pitch(AngleAxisd(degToRad(fgData.pitch_deg),Vector3d(0, 1, 0)));
+	Quaterniond heading(AngleAxisd(degToRad(fgData.heading_deg),Vector3d(0, 0, 1)));
 	Quaterniond bodyRot = heading * pitch * roll;
 
 	Vector3d rollRateP(degToRad(fgData.rateRoll_degps), 0, 0);
 
 	Vector3d pitchRate(0, degToRad(fgData.ratePitch_degps), 0);
-	Vector3d pitchRateP = bodyRot.RotateVectorReverse(heading.RotateVector(pitchRate));
+	Vector3d pitchRateP = bodyRot.inverse()._transformVector(heading._transformVector(pitchRate));
 
 	Vector3d headingRate(0, 0, degToRad(fgData.rateYaw_degps));
-	Vector3d headingRateP = bodyRot.RotateVectorReverse(headingRate);
+	Vector3d headingRateP = bodyRot.inverse()._transformVector(headingRate);
 
 	Vector3d ret = rollRateP + pitchRateP + headingRateP;
 	return ret;
@@ -209,12 +209,12 @@ Vector3d VehicleState::getMagneticField(const fgOutputData &fgData)
 
 	Vector3d mag_g(X, Y, Z);
 
-	Quaterniond roll(Vector3d(1, 0, 0), degToRad(fgData.roll_deg));
-	Quaterniond pitch(Vector3d(0, 1, 0), degToRad(fgData.pitch_deg));
-	Quaterniond heading(Vector3d(0, 0, 1), degToRad(fgData.heading_deg));
+	Quaterniond roll(AngleAxisd(degToRad(fgData.roll_deg),Vector3d(1, 0, 0)));
+	Quaterniond pitch(AngleAxisd(degToRad(fgData.pitch_deg),Vector3d(0, 1, 0)));
+	Quaterniond heading(AngleAxisd(degToRad(fgData.heading_deg),Vector3d(0, 0, 1)));
 	Quaterniond bodyRot = heading * pitch * roll;
 
-	Vector3d mag1 = bodyRot.RotateVectorReverse(mag_g);
+	Vector3d mag1 = bodyRot.inverse()._transformVector(mag_g);
 
 	return mag1;
 }
