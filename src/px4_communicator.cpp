@@ -191,6 +191,18 @@ int PX4Communicator::Send(int offset_us)
         return -1;
     }
 
+
+    mavlink_raw_rpm_t rpmmessage;
+    rpmmessage.index=0;
+    rpmmessage.frequency=vehicle->rpm;
+    mavlink_msg_raw_rpm_encode_chan(1, 200, MAVLINK_COMM_0, &msg, &rpmmessage);
+    packetlen = mavlink_msg_to_send_buffer(buffer, &msg);
+    if(send(px4MavlinkSock, buffer, packetlen, 0)!=packetlen)
+    {
+        std::cerr << "PX4 Communicator: Sent to PX4 failed: " << strerror(errno) <<std::endl;
+        return -1;
+    }
+
     return 0;
 }
 
