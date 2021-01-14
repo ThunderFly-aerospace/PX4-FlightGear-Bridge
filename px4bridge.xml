@@ -154,6 +154,13 @@
 		<node>/systems/pitot/measured-total-pressure-inhg</node>
 	</chunk>
 
+     <chunk>
+		<name>rpm</name>
+	    <type>double</type>
+        <format>%.3f</format>
+		<node>/rotors/main/rpm</node>
+	</chunk>
+
     </output>
 
     <input>
