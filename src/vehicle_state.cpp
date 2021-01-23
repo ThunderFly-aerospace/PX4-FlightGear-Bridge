@@ -100,6 +100,8 @@ void VehicleState::setFGData(const fgOutputData &fgData)
 
 	setSensor(fgData);
 	setGPSMsg(fgData);
+
+	rpm=fgData.rpm;
 }
 
 void VehicleState::setGPSMsg(const fgOutputData &fgData)
