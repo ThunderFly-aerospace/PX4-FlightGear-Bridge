@@ -118,6 +118,7 @@ parameters = [
     "--disable-clouds3d",
     "--fog-fastest",
     "--visibility=2000",
+    "--model-hz=500",
     "--disable-distance-attenuation",
     "--disable-real-weather-fetch",
     "--prop:/sim/rendering/particles=0",
