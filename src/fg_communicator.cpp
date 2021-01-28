@@ -176,7 +176,7 @@ int FGCommunicator::Recieve(bool blocking)
 				swap64(&outputPacket.rpm);
 
 				//fprintf(stderr,"FG data recieved\n");
-                if(outputPacket.elapsed_sec>0)
+                if(outputPacket.elapsed_sec>5)
     				vehicle->setFGData(outputPacket);
                 else
                     return 0;
