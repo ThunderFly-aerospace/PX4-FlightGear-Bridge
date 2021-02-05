@@ -173,7 +173,6 @@ int PX4Communicator::Send(int offset_us)
 
     mavlink_msg_hil_sensor_encode_chan(1, 200, MAVLINK_COMM_0, &msg, &sensor_msg);
     packetlen = mavlink_msg_to_send_buffer(buffer, &msg);
-    send(px4MavlinkSock, buffer, packetlen, 0);
     if(send(px4MavlinkSock, buffer, packetlen, 0)!=packetlen)
     {
         std::cerr << "PX4 Communicator: Sent to PX4 failed: "<< strerror(errno) <<std::endl;
