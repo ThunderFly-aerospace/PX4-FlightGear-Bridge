@@ -81,6 +81,12 @@ print(fgargsex)
 if fgargsex is None:
     fgargsex=" ".join(exparameters);
 
+#get FGFS ADD PARAMS 
+fgargsadd=os.getenv("FG_ARGS_ADD")
+print(fgargsadd)
+if fgargsadd is None:
+    fgargsadd="";
+
 protocols=fgroot+'/Protocol'
 if not os.access(protocols, os.W_OK):
     print('Cannot Write into direcotry: '+ protocols)
@@ -165,7 +171,7 @@ baseparameters = [
 ]
 
 #with FG output
-commnad=fgbin+" "+" ".join(baseparameters)+" "+fgargsex+" & echo $! > /tmp/px4fgfspid_"+str(px4id)
+commnad=fgbin+" "+" ".join(baseparameters)+" "+fgargsex+" "+fgargsadd+" & echo $! > /tmp/px4fgfspid_"+str(px4id)
 
 print(commnad)
 os.system(commnad)
