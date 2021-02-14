@@ -177,20 +177,20 @@ void VehicleState::setSensor(const fgOutputData &fgData)
 Vector3d VehicleState::getGyro(const fgOutputData &fgData)
 {
 
+    double dt=fgData.elapsed_sec-lastFGTime;
+    lastFGTime=fgData.elapsed_sec;
+
 	Quaterniond roll(AngleAxisd(degToRad(fgData.roll_deg),Vector3d(1, 0, 0)));
 	Quaterniond pitch(AngleAxisd(degToRad(fgData.pitch_deg),Vector3d(0, 1, 0)));
 	Quaterniond heading(AngleAxisd(degToRad(fgData.heading_deg),Vector3d(0, 0, 1)));
 	Quaterniond bodyRot = heading * pitch * roll;
 
-	Vector3d rollRateP(degToRad(fgData.rateRoll_degps), 0, 0);
+    Quaterniond diff=bodyRot*lastFGBodyRot.inverse();
+    lastFGBodyRot=bodyRot;
 
-	Vector3d pitchRate(0, degToRad(fgData.ratePitch_degps), 0);
-	Vector3d pitchRateP = bodyRot.inverse()._transformVector(heading._transformVector(pitchRate));
+    AngleAxisd rotVct(diff);
+    Vector3d ret=bodyRot.inverse()._transformVector(rotVct.angle()/dt*rotVct.axis());
 
-	Vector3d headingRate(0, 0, degToRad(fgData.rateYaw_degps));
-	Vector3d headingRateP = bodyRot.inverse()._transformVector(headingRate);
-
-	Vector3d ret = rollRateP + pitchRateP + headingRateP;
 	return ret;
 }
 
