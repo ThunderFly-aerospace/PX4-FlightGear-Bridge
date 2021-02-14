@@ -144,6 +144,11 @@ private:
     double pressure_alt;
     double diff_pressure;
 
+    
+    Quaterniond lastFGBodyRot;
+    double lastFGTime;
+
+    
 };
 
 #endif
