@@ -38,7 +38,7 @@ You can tune your FG installation/settings by the following environment variable
 
 FlightGear Bridge and starting script now support multiple instances of PX4. FG\_run script takes the second argument, which is PX4 ID (and automatically adjust the port numbers according to given number) and bridge binary takes this ID as the first argument before the output of get\_FGbridge\_params.py
 
-If you want to test another aircraft with PX4, you need:
+If you want to use another FlightGear aircraft with PX4, you need:
 1) Add the FlightGear aircraft to ```models``` subdirectory, or to other MODEL PATH searched by FG
 2) In ```models``` subdirectory create ```.json``` file. 
 3) Add model into PX4 make system in file ```platforms/posix/cmake/sitl_target.cmake``` with same name as json file in previous step.
