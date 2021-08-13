@@ -29,7 +29,7 @@ General usage consists following steps
 ##### Rascal airplane
 
 1) Open [QgroundControl](http://qgroundcontrol.com/)
-2) In PX4Firmware folder run: ```make px4_sitl_nolockstep flightgear_rascal``` for plane.
+2) In PX4Firmware folder run: ```make px4_sitl_nolockstep flightgear_rascal``` for plane with combustion engine. Alternatively you could use  ```make px4_sitl_nolockstep flightgear_rascal-electric``` for plane with electric engine model. 
 3) Wait until FlightGear fully loads.
 
 ##### TF-G1 autogyro
@@ -43,6 +43,13 @@ General usage consists following steps
 1) Open [QgroundControl](http://qgroundcontrol.com/)
 2) In PX4Firmware folder run: ```make px4_sitl_nolockstep flightgear_tf-g2``` for [TF-G2 autogyro](https://github.com/ThunderFly-aerospace/TF-G2).
 3) Wait until FlightGear fully loads.
+
+##### TF-R1 rover
+
+1) Open [QgroundControl](http://qgroundcontrol.com/)
+2) In PX4Firmware folder run: ```make px4_sitl_nolockstep flightgear_tf-r1``` for [TF-R1 ground rover](https://github.com/ThunderFly-aerospace/TF-R1).
+3) Wait until FlightGear fully loads.
+
 
 
 #### Known issues
