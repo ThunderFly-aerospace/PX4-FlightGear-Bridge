@@ -19,9 +19,31 @@ It connects to FG (over UDP generic protocol) and transforms the data to TCP MAV
 
 #### Startup
 
+General usage consists following steps
+
+1) Open [QgroundControl](http://qgroundcontrol.com/)
+2) In [PX4Firmware](https://github.com/PX4/PX4-Autopilot) folder run: ```make px4_sitl_nolockstep flightgear_model-name```
+3) Wait until FlightGear fully loads.
+
+
+##### Rascal airplane
+
 1) Open [QgroundControl](http://qgroundcontrol.com/)
 2) In PX4Firmware folder run: ```make px4_sitl_nolockstep flightgear_rascal``` for plane.
 3) Wait until FlightGear fully loads.
+
+##### TF-G1 autogyro
+
+1) Open [QgroundControl](http://qgroundcontrol.com/)
+2) In PX4Firmware folder run: ```make px4_sitl_nolockstep flightgear_tf-g1``` for [TF-G1 autogyro](https://github.com/ThunderFly-aerospace/TF-G1).
+3) Wait until FlightGear fully loads.
+
+##### TF-G2 autogyro
+
+1) Open [QgroundControl](http://qgroundcontrol.com/)
+2) In PX4Firmware folder run: ```make px4_sitl_nolockstep flightgear_tf-g2``` for [TF-G2 autogyro](https://github.com/ThunderFly-aerospace/TF-G2).
+3) Wait until FlightGear fully loads.
+
 
 #### Known issues
 
