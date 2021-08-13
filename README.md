@@ -2,7 +2,7 @@
 
 ![Build Tests](https://github.com/PX4/PX4-FlightGear-Bridge/workflows/Build%20Tests/badge.svg)
 
-The FlightGear alternative to the current PX4's mainstream simulator Gazebo.
+The FlightGear alternative to the current PX4's mainstream simulator Gazebo. The FlightGear expands the simulation possibilities by advanced weather simulations. 
 
 ![FlightGear SITL connected with PX4 and QGroundControl](art/screenshot.png)
 
@@ -10,23 +10,26 @@ This stand-alone application adding the possibility of the use of the FlightGear
 
 It connects to FG (over UDP generic protocol) and transforms the data to TCP MAVlink packets for the PX4 stack.
 
-### How to run the development version:
+### How to use the FlightGear with PX4
 
-#### Install:
+#### Install
+
 1) Install FlightGear. In Ubuntu You can use install last stable FG from the [PPA repository](https://launchpad.net/~saiarcot895/+archive/ubuntu/flightgear) by following commands: ```sudo add-apt-repository -y -u ppa:saiarcot895/flightgear``` and ```sudo DEBIAN_FRONTEND=noninteractive apt-get -y --quiet install flightgear```
 3) Set write permissions to the `Protocols` folder in the FlightGear instalation directory. On Ubuntu run ```sudo chmod a+w /usr/share/games/flightgear/Protocol ```
 
-#### Run:
+#### Startup
+
 1) Open [QgroundControl](http://qgroundcontrol.com/)
 2) In PX4Firmware folder run: ```make px4_sitl_nolockstep flightgear_rascal``` for plane.
 3) Wait until FlightGear fully loads.
 
-#### Known issues:
+#### Known issues
+
 1) If you have FPS lower than 20 the bridge will not work correctly. Check your FPS. In FlightGear display frame rate by enabling it in View->View Options->Show frame rate.
-2) You can probably use a wild set of FG versions - we tested installation with FG 2019.1.1 and the "next" (source-code branch) of FG (nightly builds). But in the past, we achieved basic functionality on Debian 9, FG 2016.1.1 from the distribution repository, with some Racal (JSBSim) model download as a zip from the FGaddon repository.
-3) Multiple models packaged with the bridge have an electric engine that needs up-to-date patched FlightGear from [nightly builds PPA repository](https://launchpad.net/~saiarcot895/+archive/ubuntu/flightgear-edge).
-5) Internal starting scripts run ```fgfs``` has a set of parameters to reduce graphic load. But before that setup, the starting script searches for the FG-Data folder by running ```fgfs --version```. If your output of this command does not contain the FG_ROOT line, the script will not work. Check how is your FG binaries in the system, by ```which fgfs```. Then the Advanced Options section of this readme can help you.
-6) If you want another plane model, you can switch the Rascal model to another editing file ```models/rascal.json```.  For example substitute ```Rascal110-YASim``` by ```Rascal110-JSBSim```, or another aircraft name.
+2) You can probably use a wild set of FG versions - we tested installation with FG 2019.1.1 and 2020.3.8. But in the past, we achieved basic functionality on Debian 9 runnig FG 2016.1.1 from the distribution repository.
+3) Multiple models packaged with the bridge have an electric engine that needs up-to-date FlightGear.
+5) PX4 internal starting script runs ```fgfs``` with a set of parameters to reduce graphic load. 
+6) The starting script searches for the FG-Data folder. Run ```fgfs --version``` to check the paths. If your output of this command does not contain the FG_ROOT line, the script will not work. Check where are FG binaries in your system, by executing command ```which fgfs```. Then the Advanced Options section of this readme could help you.
 
 ### Advanced Options
 
@@ -42,11 +45,13 @@ If you want to use a currently unsupported FlightGear aircraft with PX4, you nee
 1) Add the FlightGear aircraft to ```models``` subdirectory, or to other MODEL PATH searched by FG
 2) In ```models``` subdirectory create ```.json``` file. 
 3) Add model into PX4 make system in file ```platforms/posix/cmake/sitl_target.cmake``` with same name as json file in previous step.
-4) You probably will need a PX4 startup script for your vehicle. (vehicle name is the same name as the name of .json file)
+4) You probably will need a new PX4 startup script for your vehicle. (vehicle name is the same name as the name of .json file)
+
+If you want test another plane model, you can switch the Rascal model to another type by editing the file ```models/rascal.json```.  For example substitute ```Rascal110-YASim``` by ```Rascal110-JSBSim```, or chosen aircraft name.
 
 ### Limitations
 
-The PX4 is connected to FlightGear thought "[generic protocol](http://wiki.flightgear.org/Generic_protocol)", which is served synchronously to the simulator graphics engine frame rate. So the PX4 gets the sensor data in frequency, depending on graphics resources and the current scene. The source-code implements artificial upsampling of sensor data to ~100Hz in the order to avoid stale sensor detection. Random noise is added to the sensor data.
+The PX4 is connected to FlightGear thought "[generic protocol](http://wiki.flightgear.org/Generic_protocol)", which is served synchronously to the simulator graphics engine frame rate. So the PX4 gets the sensor data in frequency, depending on graphics resources and the current scene. The source-code implements artificial upsampling of sensor data to ~100Hz to avoid stale sensor detection trigger in PX4. Random noise is added to the sensor data.
 
 The possible better approach is to obtain the FlightGear using an [HLA](http://wiki.flightgear.org/High-Level_Architecture) interface.
 
