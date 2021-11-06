@@ -47,7 +47,7 @@
 
 
 #include <stdio.h>
-#include <mavlink/v2.0/common/mavlink.h>
+#include <common/mavlink.h>
 
 #include <sys/types.h>
 #include <sys/socket.h>
