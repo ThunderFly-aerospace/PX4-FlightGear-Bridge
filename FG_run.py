@@ -75,13 +75,13 @@ fgmodelsdir=os.getenv("FG_MODELS_DIR")
 if fgmodelsdir is None:
     fgmodelsdir='./models'
 
-#get FGFS EXTRA PARAMS 
+#get FGFS EXTRA PARAMS
 fgargsex=os.getenv("FG_ARGS_EX")
 print(fgargsex)
 if fgargsex is None:
     fgargsex=" ".join(exparameters);
 
-#get FGFS ADD PARAMS 
+#get FGFS ADD PARAMS
 fgargsadd=os.getenv("FG_ARGS_ADD")
 print(fgargsadd)
 if fgargsadd is None:
@@ -138,6 +138,7 @@ baseparameters = [
     "--aircraft=" + model,
     "--fg-aircraft=" + fgmodelsdir,
     "--telnet="+str(15400+px4id),
+    "--timeofday=noon",
     "--generic=socket,out,100,127.0.0.1,"+str(15200+px4id)+",udp,FGtoPX4",
     "--generic=socket,in,100,,"+str(15300+px4id)+",udp,PX4toFG",
     "--model-hz=120",
