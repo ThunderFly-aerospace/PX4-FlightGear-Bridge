@@ -45,8 +45,8 @@
 
 #include <random>
 
-#include <mavlink/v2.0/common/mavlink.h>
-#include <Eigen/Geometry> 
+#include <common/mavlink.h>
+#include <Eigen/Geometry>
 
 using namespace Eigen;
 
@@ -148,11 +148,11 @@ private:
     double pressure_alt;
     double diff_pressure;
 
-    
+
     Quaterniond lastFGBodyRot;
     double lastFGTime;
 
-    
+
 };
 
 #endif
