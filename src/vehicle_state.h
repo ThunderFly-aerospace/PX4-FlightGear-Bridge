@@ -84,6 +84,9 @@ struct fgOutputData {
 	double          pressure_inhg;
 	double          measured_total_pressure_inhg;
 
+	//rpm
+	double          rpm;
+
 } __attribute__((packed));
 
 
@@ -95,6 +98,7 @@ class VehicleState
 public:
 
 	mavlink_hil_gps_t hil_gps_msg;
+	double rpm;
 	double *FGControls;
 	int controlsCount;
 
@@ -143,6 +147,11 @@ private:
     double abs_pressure;
     double pressure_alt;
     double diff_pressure;
+
+
+    Quaterniond lastFGBodyRot;
+    double lastFGTime;
+
 
 };
 

@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- *   Copyright (c) 2020 ThunderFly s.r.o.. All rights reserved.
+ *   Copyright (c) 2020-2022 ThunderFly s.r.o.. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -173,8 +173,10 @@ int FGCommunicator::Recieve(bool blocking)
 				swap64(&outputPacket.pressure_inhg);
 				swap64(&outputPacket.measured_total_pressure_inhg);
 
+				swap64(&outputPacket.rpm);
+
 				//fprintf(stderr,"FG data recieved\n");
-                if(outputPacket.elapsed_sec>0)
+                if(outputPacket.elapsed_sec>5)
     				vehicle->setFGData(outputPacket);
                 else
                     return 0;
