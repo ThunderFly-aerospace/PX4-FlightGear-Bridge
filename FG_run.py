@@ -9,6 +9,40 @@ import shutil
 
 import subprocess
 
+exparameters = [
+    "--enable-terrasync",
+    "--timeofday=noon",
+    "--disable-sound",
+    "--disable-random-objects",
+    "--prop:/sim/rendering/texture-compression=off",
+    "--prop:/sim/rendering/quality-level=0",
+    "--prop:/sim/rendering/shaders/quality-level=0",
+    "--disable-ai-traffic",
+    "--prop:/sim/ai/enabled=0",
+    "--prop:/sim/rendering/random-vegetation=0",
+    "--prop:/sim/rendering/random-buildings=0",
+    "--disable-specular-highlight",
+    "--disable-ai-models",
+    "--disable-clouds",
+    "--disable-clouds3d",
+    "--fog-fastest",
+    "--visibility=2000",
+    "--disable-distance-attenuation",
+    "--disable-real-weather-fetch",
+    "--prop:/sim/rendering/particles=0",
+    "--prop:/sim/rendering/multi-sample-buffers=1",
+    "--prop:/sim/rendering/multi-samples=2",
+    "--prop:/sim/rendering/draw-mask/clouds=false",
+    "--prop:/sim/rendering/draw-mask/aircraft=true",
+    "--prop:/sim/rendering/draw-mask/models=true",
+    "--prop:/sim/rendering/draw-mask/terrain=true",
+    "--disable-random-vegetation",
+    "--disable-random-buildings",
+    "--disable-rembrandt",
+    "--disable-horizon-effect"
+]
+
+
 if len(sys.argv)!=3:
     print('FG_run.py -- bad argument count')
     exit(-1)
@@ -41,11 +75,17 @@ fgmodelsdir=os.getenv("FG_MODELS_DIR")
 if fgmodelsdir is None:
     fgmodelsdir='./models'
 
-#get FGFS EXTRA PARAMS dir
+#get FGFS EXTRA PARAMS
 fgargsex=os.getenv("FG_ARGS_EX")
 print(fgargsex)
 if fgargsex is None:
-    fgargsex=''
+    fgargsex=" ".join(exparameters);
+
+#get FGFS ADD PARAMS
+fgargsadd=os.getenv("FG_ARGS_ADD")
+print(fgargsadd)
+if fgargsadd is None:
+    fgargsadd="";
 
 protocols=fgroot+'/Protocol'
 if not os.access(protocols, os.W_OK):
@@ -94,13 +134,11 @@ shutil.copy('px4bridge.xml',protocols+'/FGtoPX4.xml' )
 
 ############################ Run FG #############################################
 
-parameters = [
+baseparameters = [
     "--aircraft=" + model,
     "--fg-aircraft=" + fgmodelsdir,
-    "--enable-terrasync",
-    "--timeofday=noon",
-    "--disable-sound",
     "--telnet="+str(15400+px4id),
+    "--timeofday=noon",
     "--generic=socket,out,100,127.0.0.1,"+str(15200+px4id)+",udp,FGtoPX4",
     "--generic=socket,in,100,,"+str(15300+px4id)+",udp,PX4toFG",
     "--model-hz=120",
@@ -118,6 +156,7 @@ parameters = [
     "--disable-clouds3d",
     "--fog-fastest",
     "--visibility=2000",
+    "--model-hz=500",
     "--disable-distance-attenuation",
     "--disable-real-weather-fetch",
     "--prop:/sim/rendering/particles=0",
@@ -129,12 +168,11 @@ parameters = [
     "--prop:/sim/rendering/draw-mask/terrain=true",
     "--disable-random-vegetation",
     "--disable-random-buildings",
-    "--disable-rembrandt",
     "--disable-horizon-effect"
 ]
 
 #with FG output
-commnad=fgbin+" "+fgargsex+" "+" ".join(parameters)+" & echo $! > /tmp/px4fgfspid_"+str(px4id)
+commnad=fgbin+" "+" ".join(baseparameters)+" "+fgargsex+" "+fgargsadd+" & echo $! > /tmp/px4fgfspid_"+str(px4id)
 
 print(commnad)
 os.system(commnad)
