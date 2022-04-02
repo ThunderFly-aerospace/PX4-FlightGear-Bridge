@@ -38,7 +38,6 @@ exparameters = [
     "--prop:/sim/rendering/draw-mask/terrain=true",
     "--disable-random-vegetation",
     "--disable-random-buildings",
-    "--disable-rembrandt",
     "--disable-horizon-effect"
 ]
 
