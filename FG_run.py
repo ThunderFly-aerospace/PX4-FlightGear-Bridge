@@ -38,7 +38,6 @@ exparameters = [
     "--prop:/sim/rendering/draw-mask/terrain=true",
     "--disable-random-vegetation",
     "--disable-random-buildings",
-    "--disable-rembrandt",
     "--disable-horizon-effect"
 ]
 
@@ -137,8 +136,10 @@ shutil.copy('px4bridge.xml',protocols+'/FGtoPX4.xml' )
 baseparameters = [
     "--aircraft=" + model,
     "--fg-aircraft=" + fgmodelsdir,
-    "--telnet="+str(15400+px4id),
+    "--enable-terrasync",
     "--timeofday=noon",
+    "--disable-sound",
+    "--telnet="+str(15400+px4id),
     "--generic=socket,out,100,127.0.0.1,"+str(15200+px4id)+",udp,FGtoPX4",
     "--generic=socket,in,100,,"+str(15300+px4id)+",udp,PX4toFG",
     "--model-hz=120",
