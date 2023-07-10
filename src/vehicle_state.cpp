@@ -151,6 +151,7 @@ mavlink_hil_sensor_t VehicleState::getSensorMsg(int offset_us)
 	sensor_msg.pressure_alt = pressure_alt + baro_alt_nois * standard_normal_distribution_(random_generator_);
 	sensor_msg.diff_pressure = diff_pressure + diff_pressure_nois * standard_normal_distribution_(random_generator_) ;
 	sensor_msg.fields_updated = (uint16_t)0x1FFF;
+	sensor_msg.id = 0;
 
     return sensor_msg;
 }
