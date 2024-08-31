@@ -1,4 +1,4 @@
-# FlightGear Bridge
+# FlightGear to PX4 Autopilot Bridge
 
 ![Build Tests](https://github.com/PX4/PX4-FlightGear-Bridge/workflows/Build%20Tests/badge.svg)
 
@@ -66,7 +66,7 @@ General usage consists following steps
 You can tune your FG installation/settings by the following environment variables:
 
 1) ```FG_BINARY``` - absolute path to FG binary to run. (It can be an AppImage)
-2) ```FG_MODELS_DIR``` - absolute path to the folder containing the manually-downloaded aircraft models which should be used for simulation.
+2) ```FG_MODELS_DIR``` - absolute path to the folder containing the manually downloaded aircraft models that should be used for simulation.
 3) ```FG_ARGS_EX``` - any additional FG parameters
 
 FlightGear Bridge and starting script now support multiple instances of PX4. FG\_run script takes the second argument, which is PX4 ID (and automatically adjusts the port numbers according to the given number) and bridge binary takes this ID as the first argument before the output of get\_FGbridge\_params.py
